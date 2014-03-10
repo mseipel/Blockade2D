@@ -10,6 +10,7 @@ public class MainActivity extends Activity {
 
     //GIT TEST MOTHERFUCKER BITCH ASS CUNT BITCH
     //Gay shit balls fuck
+    //fuck balls shit Gay
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
