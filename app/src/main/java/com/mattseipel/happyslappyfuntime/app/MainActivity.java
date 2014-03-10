@@ -8,7 +8,7 @@ import android.view.MenuItem;
 
 public class MainActivity extends Activity {
 
-    //GIT TEST MOTHERFUCKER BITCH ASS CUNT
+    //GIT TEST MOTHERFUCKER BITCH ASS CUNT BITCH
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
