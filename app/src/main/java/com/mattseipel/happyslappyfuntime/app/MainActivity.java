@@ -5,13 +5,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+//Clayton Gillis, Matt Seipel, Drew Scott
+//Lane Defense Game
+//Final Project for Mobile Computing: Android
+
 
 public class MainActivity extends Activity {
-
-    //GIT TEST MOTHERFUCKER BITCH ASS CUNT BITCH
-    //Gay shit balls fuck
-    //fuck balls shit Gay
-    //FINALLY!  THIS FUCKING BULLSHIT WORKS WOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
