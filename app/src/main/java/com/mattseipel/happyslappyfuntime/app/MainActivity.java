@@ -1,9 +1,13 @@
 package com.mattseipel.happyslappyfuntime.app;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+
+import java.lang.reflect.Type;
 
 //Clayton Gillis, Matt Seipel, Drew Scott
 //Lane Defense Game
@@ -12,10 +16,17 @@ import android.view.MenuItem;
 
 public class MainActivity extends Activity {
 
+    //references to the start menu buttons
+    Button startGameBTN;
+    Button rulesBTN;
+    Button quitBTN;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.changeTypeFace();
     }
 
 
@@ -37,5 +48,19 @@ public class MainActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    //changes the typeface of various elements
+    public void changeTypeFace(){
+        Typeface startMenuFont = Typeface.createFromAsset(this.getAssets(), "valdemar.ttf");
+
+        startGameBTN = (Button)this.findViewById(R.id.startGameBTN);
+        rulesBTN = (Button)this.findViewById(R.id.rulesBTN);
+        quitBTN = (Button)this.findViewById(R.id.quitBTN);
+
+        //set the typeface of each button
+        startGameBTN.setTypeface(startMenuFont);
+        rulesBTN.setTypeface(startMenuFont);
+        quitBTN.setTypeface(startMenuFont);
     }
 }
