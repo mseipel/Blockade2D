@@ -1,15 +1,13 @@
 package com.mattseipel.happyslappyfuntime.app;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
-import java.lang.reflect.Type;
-import java.util.concurrent.ThreadPoolExecutor;
 
 //Clayton Gillis, Matt Seipel, Drew Scott
 //Lane Defense Game
@@ -71,7 +69,9 @@ public class MainActivity extends Activity {
 
     //onClick method for startGameBTN
     public void startGame(View view){
-
+        //test animation. remove if you need to
+        Intent intent = new Intent(this, AnimationTesting.class);
+        startActivity(intent);
     }
 
     //onClick method for rulesBTN

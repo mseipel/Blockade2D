@@ -43,4 +43,5 @@
         android:textColor="@android:color/holo_green_light"
         android:textSize="24dp"
         android:onClick="quitApplication" />
+
 </RelativeLayout>
