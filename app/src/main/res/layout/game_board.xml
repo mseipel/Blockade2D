@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#000000"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <Button
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="Menu"
+        android:id="@+id/menuBTN"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:onClick="openMenu"
+        android:textColor="@android:color/holo_green_light" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="0"
+        android:id="@+id/enemiesRemaining"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="24dp"
+        android:gravity="center_horizontal"
+        android:layout_above="@+id/pointsTV"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/pointsTV" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="0"
+        android:id="@+id/pointsTV"
+        android:gravity="center_horizontal"
+        android:layout_above="@+id/menuBTN"
+        android:layout_alignParentStart="true"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="24dp"
+        android:layout_alignEnd="@+id/menuBTN" />
+
+    <view
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        class="com.mattseipel.happyslappyfuntime.app.GameBoardCustomView"
+        android:id="@+id/view"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/menuBTN" />
+</RelativeLayout>

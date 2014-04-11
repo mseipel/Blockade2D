@@ -5,9 +5,11 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 
 import java.lang.reflect.Type;
+import java.util.concurrent.ThreadPoolExecutor;
 
 //Clayton Gillis, Matt Seipel, Drew Scott
 //Lane Defense Game
@@ -20,6 +22,9 @@ public class MainActivity extends Activity {
     Button startGameBTN;
     Button rulesBTN;
     Button quitBTN;
+
+    //typeface for the start menu buttons
+    Typeface startMenuFont;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +57,7 @@ public class MainActivity extends Activity {
 
     //changes the typeface of various elements
     public void changeTypeFace(){
-        Typeface startMenuFont = Typeface.createFromAsset(this.getAssets(), "valdemar.ttf");
+        startMenuFont = Typeface.createFromAsset(this.getAssets(), "valdemar.ttf");
 
         startGameBTN = (Button)this.findViewById(R.id.startGameBTN);
         rulesBTN = (Button)this.findViewById(R.id.rulesBTN);
@@ -62,5 +67,20 @@ public class MainActivity extends Activity {
         startGameBTN.setTypeface(startMenuFont);
         rulesBTN.setTypeface(startMenuFont);
         quitBTN.setTypeface(startMenuFont);
+    }
+
+    //onClick method for startGameBTN
+    public void startGame(View view){
+
+    }
+
+    //onClick method for rulesBTN
+    public void showRules(View view){
+
+    }
+
+    //onClick method for quitBTN
+    public void quitApplication(View view){
+
     }
 }

@@ -10,17 +10,18 @@
     tools:context="com.mattseipel.happyslappyfuntime.app.MainActivity">
 
     <Button
-        android:layout_width="150dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="Rules"
         android:id="@+id/rulesBTN"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:onClick="showRules"
-        android:textColor="@android:color/holo_green_light" />
+        android:textColor="@android:color/holo_green_light"
+        android:textSize="24dp" />
 
     <Button
-        android:layout_width="150dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="Start Game"
         android:id="@+id/startGameBTN"
@@ -28,15 +29,18 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="40dp"
         android:onClick="startGame"
-        android:textColor="@android:color/holo_green_light" />
+        android:textColor="@android:color/holo_green_light"
+        android:textSize="24dp" />
 
     <Button
-        android:layout_width="150dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="Quit"
         android:id="@+id/quitBTN"
         android:layout_below="@+id/rulesBTN"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:textColor="@android:color/holo_green_light" />
+        android:textColor="@android:color/holo_green_light"
+        android:textSize="24dp"
+        android:onClick="quitApplication" />
 </RelativeLayout>
