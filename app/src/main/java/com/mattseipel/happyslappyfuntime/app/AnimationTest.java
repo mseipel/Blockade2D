@@ -28,6 +28,7 @@ public class AnimationTest extends View {
         super(context, attrs);
         sr = new SpritesheetReader(bowser, 0, 0, bowser.getWidth(), bowser
         .getHeight(), 8, 16);
+
     }
 
     public AnimationTest(Context context, AttributeSet attrs, int defStyle) {
