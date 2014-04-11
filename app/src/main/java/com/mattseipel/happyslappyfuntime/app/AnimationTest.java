@@ -38,9 +38,11 @@ public class AnimationTest extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+
     }
 
     public void update(){
-
+        sr.update(System.currentTimeMillis());
     }
 }

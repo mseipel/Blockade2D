@@ -4,6 +4,7 @@ package com.mattseipel.happyslappyfuntime.app;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
+import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 
@@ -50,6 +51,13 @@ public class SpritesheetReader {
         //cut out the sprite with the rectangle
         this.sourceRect.left = currentFrame * spriteWidth;
         this.sourceRect.right = this.sourceRect.left + spriteWidth;
+    }
+
+    public void draw(Canvas canvas){
+        //where to draw the sprite
+        Rect destRect = new Rect(x, y, x + spriteWidth, y + spriteHeight);
+        canvas.drawBitmap(bitmap, sourceRect, destRect, null);
+
     }
 
 
