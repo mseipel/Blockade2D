@@ -70,7 +70,7 @@ public class MainActivity extends Activity {
     //onClick method for startGameBTN
     public void startGame(View view){
         //test animation. remove if you need to
-        Intent intent = new Intent(this, AnimationTesting.class);
+        Intent intent = new Intent(this, SurfaceViewExample.class);
         startActivity(intent);
     }
 

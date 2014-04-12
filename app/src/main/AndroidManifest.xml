@@ -26,6 +26,10 @@
             android:name="com.mattseipel.happyslappyfuntime.app.AnimationTesting"
             android:label="@string/title_activity_animation_testing" >
         </activity>
+        <activity
+            android:name="com.mattseipel.happyslappyfuntime.app.SurfaceViewExample"
+            android:label="@string/title_activity_surface_view_example" >
+        </activity>
     </application>
 
 </manifest>

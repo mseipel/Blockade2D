@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationSet;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -88,8 +89,17 @@ public class AnimationTesting extends Activity {
             @Override
             public void onAnimationCancel(Animator animation) {}
             @Override
-            public void onAnimationRepeat(Animator animation) {}
+            public void onAnimationRepeat(Animator animation) {
+                if (getImageResource(bowser) == R.drawable.bowser_step1) {
+                    bowser.setImageResource(R.drawable.bowser_step2);
+                    bowser.setTag(R.drawable.bowser_step2);
+                } else if (getImageResource(bowser) == R.drawable.bowser_step2) {
+                    bowser.setImageResource(R.drawable.bowser_step1);
+                    bowser.setTag(R.drawable.bowser_step1);
+                }
+            }
         });
+
     }
 
     public void automateClicks(){
@@ -105,4 +115,6 @@ public class AnimationTesting extends Activity {
     public int getImageResource(ImageView iv) {
         return (Integer) iv.getTag();
     }
+
+
 }
