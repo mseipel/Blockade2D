@@ -30,6 +30,11 @@
             android:name="com.mattseipel.happyslappyfuntime.app.SurfaceViewExample"
             android:label="@string/title_activity_surface_view_example" >
         </activity>
+        <activity
+            android:name="com.mattseipel.happyslappyfuntime.app.GameBoard"
+            android:screenOrientation="landscape"
+            android:label="@string/title_activity_game_board" >
+        </activity>
     </application>
 
 </manifest>

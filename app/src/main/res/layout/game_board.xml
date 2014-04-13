@@ -12,42 +12,114 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:onClick="openMenu"
-        android:textColor="@android:color/holo_green_light" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="0"
-        android:id="@+id/enemiesRemaining"
-        android:textColor="@android:color/holo_red_dark"
-        android:textSize="24dp"
-        android:gravity="center_horizontal"
-        android:layout_above="@+id/pointsTV"
-        android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/pointsTV" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="0"
-        android:id="@+id/pointsTV"
-        android:gravity="center_horizontal"
-        android:layout_above="@+id/menuBTN"
-        android:layout_alignParentStart="true"
-        android:textColor="@android:color/holo_blue_dark"
-        android:textSize="24dp"
-        android:layout_alignEnd="@+id/menuBTN" />
+        android:textColor="@android:color/holo_orange_dark" />
 
     <view
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
         class="com.mattseipel.happyslappyfuntime.app.GameBoardCustomView"
-        android:id="@+id/view"
+        android:id="@+id/gameBoardView"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
+        android:layout_above="@+id/menuBTN"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Money"
+        android:id="@+id/moneyLabelTV"
+        android:layout_below="@+id/gameBoardView"
+        android:layout_toRightOf="@+id/menuBTN"
+        android:gravity="center_horizontal"
+        android:textSize="18dp"
+        android:textColor="@android:color/holo_blue_dark" />
+
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Health"
+        android:id="@+id/healthLabelTV"
+        android:layout_alignBottom="@+id/moneyLabelTV"
+        android:layout_toRightOf="@+id/moneyLabelTV"
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="18dp"
+        android:layout_toLeftOf="@+id/imageView5" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="0"
+        android:id="@+id/moneyTV"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/menuBTN" />
+        android:layout_toRightOf="@+id/menuBTN"
+        android:layout_below="@+id/moneyLabelTV"
+        android:layout_toLeftOf="@+id/healthLabelTV"
+        android:gravity="center_vertical|center_horizontal"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="0"
+        android:id="@+id/healthTV"
+        android:layout_below="@+id/healthLabelTV"
+        android:layout_toRightOf="@+id/moneyTV"
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/healthLabelTV"
+        android:gravity="center_vertical|center_horizontal"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="20dp" />
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_below="@+id/gameBoardView"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/healthTV"
+        android:background="@android:color/holo_blue_dark" />
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView2"
+        android:layout_below="@+id/gameBoardView"
+        android:layout_toLeftOf="@+id/imageView"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/holo_green_dark" />
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView3"
+        android:layout_below="@+id/gameBoardView"
+        android:layout_toLeftOf="@+id/imageView2"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/holo_orange_dark" />
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView4"
+        android:layout_below="@+id/gameBoardView"
+        android:layout_toLeftOf="@+id/imageView3"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/holo_purple" />
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView5"
+        android:layout_below="@+id/gameBoardView"
+        android:layout_toLeftOf="@+id/imageView4"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/holo_red_dark" />
 </RelativeLayout>

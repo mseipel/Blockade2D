@@ -6,5 +6,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_animation_testing">AnimationTesting</string>
     <string name="title_activity_surface_view_example">SurfaceViewExample</string>
+    <string name="title_activity_game_board">GameBoard</string>
 
 </resources>

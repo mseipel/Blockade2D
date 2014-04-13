@@ -17,7 +17,7 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:onClick="showRules"
-        android:textColor="@android:color/holo_green_light"
+        android:textColor="@android:color/holo_orange_dark"
         android:textSize="24dp" />
 
     <Button
@@ -29,7 +29,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="40dp"
         android:onClick="startGame"
-        android:textColor="@android:color/holo_green_light"
+        android:textColor="@android:color/holo_orange_dark"
         android:textSize="24dp" />
 
     <Button
@@ -40,7 +40,7 @@
         android:layout_below="@+id/rulesBTN"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:textColor="@android:color/holo_green_light"
+        android:textColor="@android:color/holo_orange_dark"
         android:textSize="24dp"
         android:onClick="quitApplication" />
 
