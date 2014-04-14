@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.Window;
 
 
 public class SurfaceViewExample extends Activity implements View.OnTouchListener{
@@ -25,9 +26,10 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
         super.onCreate(savedInstanceState);
         v = new SpecialView(this);
         v.setOnTouchListener(this);
-        bm = BitmapFactory.decodeResource(getResources(), R.drawable.bowser_sprite);
+        bm = BitmapFactory.decodeResource(getResources(), R.drawable.dk_sprite);
         x = y = 0;
-        setContentView(v);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(new GameBoardCustomView(this));
     }
 
     @Override
@@ -54,7 +56,7 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
         }
 
         public void run(){
-            sprite = new Sprite(SpecialView.this, bm, 16, 1);
+            sprite = new Sprite(SpecialView.this, bm, 5, 1);
 
             while(running){
                 //performs canvas drawing

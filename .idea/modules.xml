@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/app/Blockade.iml" filepath="$PROJECT_DIR$/app/Blockade.iml" />
       <module fileurl="file://$PROJECT_DIR$/HappySlappyFunTime.iml" filepath="$PROJECT_DIR$/HappySlappyFunTime.iml" />
       <module fileurl="file://$PROJECT_DIR$/android_final_project_spring2014.iml" filepath="$PROJECT_DIR$/android_final_project_spring2014.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
 </project>

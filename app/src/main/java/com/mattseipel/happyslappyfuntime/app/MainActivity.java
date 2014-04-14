@@ -75,7 +75,8 @@ public class MainActivity extends Activity {
 
     //onClick method for rulesBTN
     public void showRules(View view){
-
+        Intent intent = new Intent(this, SurfaceViewExample.class);
+        startActivity(intent);
     }
 
     //onClick method for quitBTN
