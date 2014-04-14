@@ -53,7 +53,7 @@ public class GameBoardCustomView extends SurfaceView {
         bmp = BitmapFactory.decodeResource(getResources(), R.drawable.dk_sprite);
         sprites.add(createSprite(R.drawable.bowser_walk));
         sprites.add(createSprite(R.drawable.dk_sprite));
-        sprites.add(createSprite(R.drawable.toad_sprite));
+        //sprites.add(createSprite(R.drawable.toad_sprite));
     }
     public GameBoardCustomView(Context context, AttributeSet attrs) {
         super(context, attrs);
