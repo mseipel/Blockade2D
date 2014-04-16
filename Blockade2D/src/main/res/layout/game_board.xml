@@ -17,7 +17,7 @@
     <view
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
+        android:background="@drawable/testpath"
         class="com.mattseipel.happyslappyfuntime.app.GameBoardCustomView"
         android:id="@+id/gameBoardView"
         android:layout_alignParentEnd="true"

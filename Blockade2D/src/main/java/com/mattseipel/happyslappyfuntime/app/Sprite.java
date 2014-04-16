@@ -30,7 +30,7 @@ public class Sprite {
         this.height = bm.getHeight() / SPRITE_SHEET_ROWS;
 
         Random rnd = new Random();
-        y = rnd.nextInt(500 - height);
+        y = rnd.nextInt(800 - height);
         xSpeed = rnd.nextInt(MAX_SPEED * 2) - MAX_SPEED;
     }
 
@@ -112,4 +112,5 @@ public class Sprite {
 //        x += xSpeed;
 //        y += ySpeed;
     }
+
 }
