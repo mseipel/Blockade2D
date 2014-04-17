@@ -73,6 +73,8 @@ public class GameBoardCustomView extends SurfaceView {
                 canvasWidth = getWidth();
 
                 background = Bitmap.createScaledBitmap(background, (int)canvasWidth, (int)canvasHeight, true);
+                sprites.add(createSprite(R.drawable.bowser_sprite));
+
             }
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
@@ -91,19 +93,7 @@ public class GameBoardCustomView extends SurfaceView {
             }
         });
 //        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.dk_sprite);
-        sprites.add(createSprite(R.drawable.bowser_sprite));
-        sprites.add(createSprite(R.drawable.bowser_sprite));
-        sprites.add(createSprite(R.drawable.bowser_sprite));
-        sprites.add(createSprite(R.drawable.bowser_sprite));
-        sprites.add(createSprite(R.drawable.bowser_sprite));
-        sprites.add(createSprite(R.drawable.bowser_sprite));
-        sprites.add(createSprite(R.drawable.bowser_sprite));
-        sprites.add(createSprite(R.drawable.bowser_sprite));
-        sprites.add(createSprite(R.drawable.bowser_sprite));
-        sprites.add(createSprite(R.drawable.bowser_sprite));
-        sprites.add(createSprite(R.drawable.bowser_sprite));
-        sprites.add(createSprite(R.drawable.bowser_sprite));
-        sprites.add(createSprite(R.drawable.bowser_sprite));
+
 
 
 //        sprites.add(createSprite(R.drawable.dk_sprite));
