@@ -13,7 +13,7 @@ import java.util.Random;
  */
 public class Sprite {
     private static final int SPRITE_SHEET_ROWS = 1;
-    private static final int SPRITE_SHEET_COLUMNS = 5;
+    private static final int SPRITE_SHEET_COLUMNS = 16;
     private static final int MAX_SPEED = 10;
     int x,y, xSpeed, ySpeed, height, width; //Position, speed, and dimensions
     Bitmap bm;
@@ -30,7 +30,7 @@ public class Sprite {
         this.height = bm.getHeight() / SPRITE_SHEET_ROWS;
 
         Random rnd = new Random();
-        y = rnd.nextInt(800 - height);
+        y = rnd.nextInt(500 - height);
         xSpeed = rnd.nextInt(MAX_SPEED * 2) - MAX_SPEED;
     }
 

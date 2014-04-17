@@ -4,9 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -23,7 +21,9 @@ public class GameBoardCustomView extends SurfaceView {
     private GameLoop gameLoop;
     private ArrayList<Sprite> sprites = new ArrayList<Sprite>();
     Paint p = new Paint();
-
+    private Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.testpath);
+    private float canvasHeight;
+    private float canvasWidth;
 
 
     public GameBoardCustomView(Context context){
@@ -53,9 +53,9 @@ public class GameBoardCustomView extends SurfaceView {
                 }
             }
         });
-        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.dk_sprite);
-        sprites.add(createSprite(R.drawable.bowser_walk));
-        sprites.add(createSprite(R.drawable.dk_sprite));
+//        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.dk_sprite);
+        sprites.add(createSprite(R.drawable.bowser_sprite));
+//        sprites.add(createSprite(R.drawable.dk_sprite));
         //sprites.add(createSprite(R.drawable.toad_sprite));
     }
     public GameBoardCustomView(Context context, AttributeSet attrs) {
@@ -68,6 +68,11 @@ public class GameBoardCustomView extends SurfaceView {
             public void surfaceCreated(SurfaceHolder holder) {
                 gameLoop.setRunning(true);
                 gameLoop.start();
+
+                canvasHeight = getHeight();
+                canvasWidth = getWidth();
+
+                background = Bitmap.createScaledBitmap(background, (int)canvasWidth, (int)canvasHeight, true);
             }
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
@@ -85,15 +90,30 @@ public class GameBoardCustomView extends SurfaceView {
                 }
             }
         });
-        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.dk_sprite);
-        sprites.add(createSprite(R.drawable.bowser_walk));
-        sprites.add(createSprite(R.drawable.dk_sprite));
+//        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.dk_sprite);
+        sprites.add(createSprite(R.drawable.bowser_sprite));
+        sprites.add(createSprite(R.drawable.bowser_sprite));
+        sprites.add(createSprite(R.drawable.bowser_sprite));
+        sprites.add(createSprite(R.drawable.bowser_sprite));
+        sprites.add(createSprite(R.drawable.bowser_sprite));
+        sprites.add(createSprite(R.drawable.bowser_sprite));
+        sprites.add(createSprite(R.drawable.bowser_sprite));
+        sprites.add(createSprite(R.drawable.bowser_sprite));
+        sprites.add(createSprite(R.drawable.bowser_sprite));
+        sprites.add(createSprite(R.drawable.bowser_sprite));
+        sprites.add(createSprite(R.drawable.bowser_sprite));
+        sprites.add(createSprite(R.drawable.bowser_sprite));
+        sprites.add(createSprite(R.drawable.bowser_sprite));
+
+
+//        sprites.add(createSprite(R.drawable.dk_sprite));
         //sprites.add(createSprite(R.drawable.toad_sprite));
     }
 
     @Override
     protected void onDraw(Canvas canvas){
-        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+//        canvas.drawBitmap(scaledBackground, 0, 0, null);
+        canvas.drawBitmap(background, 0, 0, null);
         //Draw the sprites contained in sprites list
         for(Sprite sprite : sprites){
             sprite.onDraw(canvas);
