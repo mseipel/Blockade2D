@@ -14,8 +14,9 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.mattseipel.happyslappyfuntime.app.MainActivity"
-            android:label="Start Menu"
-            android:screenOrientation="portrait" >
+            android:label="Blockade2D"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,7 +34,7 @@
         <activity
             android:name="com.mattseipel.happyslappyfuntime.app.GameBoard"
             android:screenOrientation="landscape"
-            android:label="@string/title_activity_game_board"
+            android:label="Blockade2D"
             android:theme="@android:style/Theme.NoTitleBar">
         </activity>
     </application>

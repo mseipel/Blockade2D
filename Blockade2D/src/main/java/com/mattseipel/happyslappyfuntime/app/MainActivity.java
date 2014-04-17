@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 //Clayton Gillis, Matt Seipel, Drew Scott
 //Lane Defense Game
@@ -16,20 +17,10 @@ import android.widget.Button;
 
 public class MainActivity extends Activity {
 
-    //references to the start menu buttons
-    Button startGameBTN;
-    Button rulesBTN;
-    Button quitBTN;
-
-    //typeface for the start menu buttons
-    Typeface startMenuFont;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        this.changeTypeFace();
     }
 
 
@@ -53,20 +44,6 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    //changes the typeface of various elements
-    public void changeTypeFace(){
-        startMenuFont = Typeface.createFromAsset(this.getAssets(), "valdemar.ttf");
-
-        startGameBTN = (Button)this.findViewById(R.id.startGameBTN);
-        rulesBTN = (Button)this.findViewById(R.id.rulesBTN);
-        quitBTN = (Button)this.findViewById(R.id.quitBTN);
-
-        //set the typeface of each button
-        startGameBTN.setTypeface(startMenuFont);
-        rulesBTN.setTypeface(startMenuFont);
-        quitBTN.setTypeface(startMenuFont);
-    }
-
     //onClick method for startGameBTN
     public void startGame(View view){
         Intent intent = new Intent(this, GameBoard.class);
@@ -75,12 +52,11 @@ public class MainActivity extends Activity {
 
     //onClick method for rulesBTN
     public void showRules(View view){
-        Intent intent = new Intent(this, SurfaceViewExample.class);
-        startActivity(intent);
+
     }
 
     //onClick method for quitBTN
     public void quitApplication(View view){
-
+        this.finish();
     }
 }
