@@ -32,7 +32,8 @@ public class Sprite {
 //        Random rnd = new Random();
 //        y = rnd.nextInt(500 - height);
 //        xSpeed = rnd.nextInt(MAX_SPEED * 2) - MAX_SPEED;
-        y = gameBoard.getHeight()/2;
+        y = gameBoard.getHeight()/3;
+        x = -200;
         xSpeed = 4;
     }
 
@@ -75,8 +76,8 @@ public class Sprite {
         //GameBoardCustomView
         boardHeight = gameBoard.getHeight();
         boardWidth = gameBoard.getWidth();
-        if(x > boardWidth - bm.getWidth()/SPRITE_SHEET_COLUMNS - xSpeed) xSpeed = -5;
-        if(x + xSpeed < 0) xSpeed = 5;
+//        if(x > boardWidth - bm.getWidth()/SPRITE_SHEET_COLUMNS - xSpeed) xSpeed = -5;
+//        if(x + xSpeed < 0) xSpeed = 5;
         x += xSpeed;
 //        currentFrame = ++currentFrame % SPRITE_SHEET_COLUMNS;
         //For the SurfaceViewExample class

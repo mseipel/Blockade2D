@@ -33,7 +33,8 @@
         <activity
             android:name="com.mattseipel.happyslappyfuntime.app.GameBoard"
             android:screenOrientation="landscape"
-            android:label="@string/title_activity_game_board" >
+            android:label="@string/title_activity_game_board"
+            android:theme="@android:style/Theme.NoTitleBar">
         </activity>
     </application>
 

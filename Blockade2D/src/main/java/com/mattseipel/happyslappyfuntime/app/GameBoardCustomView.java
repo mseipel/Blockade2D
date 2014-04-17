@@ -21,7 +21,7 @@ public class GameBoardCustomView extends SurfaceView {
     private GameLoop gameLoop;
     private ArrayList<Sprite> sprites = new ArrayList<Sprite>();
     Paint p = new Paint();
-    private Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.testpath);
+    private Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.level1);
     private float canvasHeight;
     private float canvasWidth;
 

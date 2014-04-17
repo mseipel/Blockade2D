@@ -28,6 +28,7 @@ public class GameBoard extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_board);
         this.changeTypeface();
+
     }
 
 
