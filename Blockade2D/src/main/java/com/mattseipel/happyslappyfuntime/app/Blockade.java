@@ -66,14 +66,6 @@ public class Blockade {
         }
     }
 
-    private int calcHealth(int damage){
-        if(getHealth() - damage <= 0){
-            setStillStanding(false);
-            return 0;
-        }
-        return getHealth() - damage;
-    }
-
     public void onDraw(Canvas canvas){
         update();
         canvas.drawBitmap(bm, getX(), getY(), null);

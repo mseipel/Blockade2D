@@ -21,10 +21,8 @@ public class Sprite {
     private float boardWidth, boardHeight;
     private boolean alive;
     Bitmap bm;
-//    SpecialView sv;
     GameBoardCustomView gameBoard;
     int currentFrame = 0;   //Current frame of the sprite sheet
-//    int direction = 0;      //direction of sprite
     int numFramesWide, numFramesHigh;
 
     public Sprite(GameBoardCustomView gameBoard, Bitmap bm, int health, int spriteSheetColumns){
@@ -34,38 +32,11 @@ public class Sprite {
         this.width = bm.getWidth() / spriteSheetColumns;
         this.height = bm.getHeight() / SPRITE_SHEET_ROWS;
         this.health = health;
-//        Random rnd = new Random();
-//        y = rnd.nextInt(500 - height);
-//        xSpeed = rnd.nextInt(MAX_SPEED * 2) - MAX_SPEED;
         setY(gameBoard.getHeight()/3);
         setX(-200);
         xSpeed = 4;
         setAlive(true);
     }
-//
-//    public Sprite(SpecialView sv, Bitmap bm, int numFramesWide, int numFramesHigh){
-//        this.bm = bm;      //Store bitmap that is passed in
-//        this.sv = sv;      //Store the view
-//        this.numFramesHigh = numFramesHigh;     //Frames (height) in spritesheet
-//        this.numFramesWide = numFramesWide;       //Frames (width) in spritesheet
-//        height = bm.getHeight() / numFramesHigh;    //height of each individual sprite
-//        width = bm.getWidth() / numFramesWide;       //width of each individual sprite
-//        x = y = 0;      //Set position
-//        xSpeed = 5;
-//        ySpeed = 0;
-//    }
-//
-//    public Sprite(SpecialView sv, Bitmap bm, int x, int y, int xSpeed, int numFramesWide, int numFramesHigh){
-//        this.bm = bm;      //Store bitmap that is passed in
-//        this.sv = sv;      //Store the view
-//        this.numFramesHigh = numFramesHigh;     //Frames (height) in spritesheet
-//        this.numFramesWide = numFramesWide;       //Frames (width) in spritesheet
-//        height = bm.getHeight() / numFramesHigh;    //height of each individual sprite
-//        width = bm.getWidth() / numFramesWide;       //width of each individual sprite
-//        this.x = x;      //Set position
-//        this.y = y;
-//        this.xSpeed = xSpeed;
-//    }
 
     public void onDraw(Canvas canvas){
         update();
@@ -79,17 +50,12 @@ public class Sprite {
     }
 
     public void update(){
-        //GameBoardCustomView
         if(health <= 0)
             setAlive(false);
 
         boardHeight = gameBoard.getHeight();
         boardWidth = gameBoard.getWidth();
-//        if(x > boardWidth - bm.getWidth()/SPRITE_SHEET_COLUMNS - xSpeed) xSpeed = -5;
-//        if(x + xSpeed < 0) xSpeed = 5;
         setX(getX() + xSpeed);
-//        currentFrame = ++currentFrame % SPRITE_SHEET_COLUMNS;
-        //For the SurfaceViewExample class
         //Facing down
 //        if(x > sv.getWidth() - width - xSpeed){ //Collision with the right bound
 //            xSpeed = 0;
@@ -115,16 +81,8 @@ public class Sprite {
 //            //direction = 3;    //To change the direction of the sprite if need be
 //        }
 //
+        //Ensure that the current frame never exceeds the number of frames available
         currentFrame = ++currentFrame % spriteSheetColumns;
-//        try{
-//            Thread.sleep(100);
-//        }catch (InterruptedException e){
-//            e.printStackTrace();
-//        }
-//
-//        currentFrame = ++currentFrame % numFramesWide;  //%16 ensures we loop back to the beginning of the spritesheet
-//        x += xSpeed;
-//        y += ySpeed;
     }
 
     public int takeDamage(int damage){

@@ -6,12 +6,11 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -19,69 +18,105 @@ import java.util.ArrayList;
  * Created by Clayton on 4/10/2014.
  */
 public class GameBoardCustomView extends SurfaceView implements View.OnTouchListener{
+    //Instance variables for the game thread
+    private SurfaceHolder holder;   //Used to create callback methods when the SurfaceView is created/changes
+    private GameLoop gameLoop;      //The loop that runs the game, technically the engine
 
-    private Bitmap bmp;
-    private SurfaceHolder holder;
-    private GameLoop gameLoop;
+    //ArrayLists used for drawing and updating the objects
     private ArrayList<Sprite> sprites = new ArrayList<Sprite>();
     private ArrayList<Blockade> blockades = new ArrayList<Blockade>();
 
     //Avoid concurrent modification exceptions by creating add and remove lists
     private ArrayList<Blockade> blockadesToAdd = new ArrayList<Blockade>();
     private ArrayList<Blockade> blockadesToRemove = new ArrayList<Blockade>();
-    private ArrayList<Sprite> spritesToAdd = new ArrayList<Sprite>();
+//    private ArrayList<Sprite> spritesToAdd = new ArrayList<Sprite>();     //Currently unused
     private ArrayList<Sprite> spritesToRemove = new ArrayList<Sprite>();
 
-    int level = 1;
-    Paint p = new Paint();
+    //Store the background for scaling and drawing
     private Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.level1);
+    private Context mContext;           //Store the GameBoard context for later use (assigned in constructor)
+
+    //Variables essential to collision detection.
+    private Sprite tempEnemy;
+    private Blockade closestToBowser;
+    float x, y, distanceFromBowser;
+
+    //Current level, determines the enemy
+    private int level = 1;
+
+    //Store the height and width of the canvas, used for scaling the background
     private float canvasHeight;
     private float canvasWidth;
-    GameBoard parent;
-    Context mContext;
-    GameBoard gb;
-    Sprite tempBowser;
-    Blockade closestToBowser;
-    float x, y, distanceFromBowser;
+
+    //Boolean variables to determine which type of blockade is being used.
     private boolean emerald;
     private boolean concrete;
     private boolean electric;
 
+    /**
+     * Constructor for the GameBoardCustomView
+     * Accepts only Context as parameters.
+     *
+     * Store the context.  Initiate the GameLoop.  Store the Holder.  Assign OnTouchListener.
+     * Create callbacks with the holder (**surface created**, changed, and destroyed).
+     *
+     * Create an alert dialog to allow the player to say they are ready.  This allows the thread to
+     * start when OK is pressed so the thread does not start immediately causing frames to be skipped.
+     *
+     * @param context
+     */
     public GameBoardCustomView(Context context){
         super(context);
         mContext = context;
-        gb = (GameBoard)mContext;
         gameLoop = new GameLoop(this);
-        holder = getHolder();
-        setOnTouchListener(this);
+        holder = getHolder();       //Get the holder from the surface view
+        setOnTouchListener(this);   //This class implements OnTouchListener, assign it.
         holder.addCallback(new SurfaceHolder.Callback() {
+            /**
+             * When the surface is created, scale the background, and pop up the alert.
+             * @param holder
+             */
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
+                //Set the thread to run when started.
                 gameLoop.setRunning(true);
 
-
+                //Get the height and the width for scaling.
                 canvasHeight = getHeight();
                 canvasWidth = getWidth();
 
+                //Scale the background image.
                 background = Bitmap.createScaledBitmap(background, (int)canvasWidth, (int)canvasHeight, true);
 
+                //Create and show the 'Ready?' dialog.
                 AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
                 dialog.setTitle("Ready?");
                 dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    /**
+                     * Start the thread (game) upon clicking 'OK'.
+                     * @param dialog
+                     * @param which
+                     */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         gameLoop.start();
-                        dialog.cancel();
+                        dialog.cancel();    //Close the dialog
                     }
                 });
                 dialog.create();
-                dialog.show();
+                dialog.show();      //Show the 'Ready?' dialog.
 
-                levelSelect(level);
-
+                levelSelect(level);     //Add the appropriate sprite to the map.
             }
+
+            //Not used for anything.
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
+
+            /**
+             * When the suface view is destroyed, join the threads, and pray for no crash.
+             * @param holder
+             */
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
                 boolean retry = true;
@@ -96,69 +131,21 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
                 }
             }
         });
-//        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.dk_sprite);
-//        sprites.add(createSprite(R.drawable.dk_sprite));
-        //sprites.add(createSprite(R.drawable.toad_sprite));
     }
 
-    public GameBoardCustomView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        mContext = context;
-        gb = (GameBoard)mContext;
-        gameLoop = new GameLoop(this);
-        holder = getHolder();
-        setOnTouchListener(this);
-        holder.addCallback(new SurfaceHolder.Callback() {
-            @Override
-            public void surfaceCreated(SurfaceHolder holder) {
-                gameLoop.setRunning(true);
-                gameLoop.start();
-
-                canvasHeight = getHeight();
-                canvasWidth = getWidth();
-
-                background = Bitmap.createScaledBitmap(background, (int)canvasWidth, (int)canvasHeight - 25, true);
-                switch(level){
-                    case 1:
-                        break;
-                    case 2:
-                        sprites.add(createSprite(R.drawable.dk_sprite, 50, 5));
-                        break;
-                    case 3:
-                        sprites.add(createSprite(R.drawable.bowser_sprite, 100, 16));
-                        break;
-                }
-
-
-
-            }
-            @Override
-            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
-            @Override
-            public void surfaceDestroyed(SurfaceHolder holder) {
-                boolean retry = true;
-                gameLoop.setRunning(false);  //End the thread that the game is running on
-                while (retry){
-                    try {
-                        gameLoop.join();
-                        retry = false;
-                    }catch (InterruptedException e){
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-//        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.dk_sprite);
-//        sprites.add(createSprite(R.drawable.dk_sprite));
-        //sprites.add(createSprite(R.drawable.toad_sprite));
-    }
-
+    /**
+     * Redraw the sprites, blockades, and background.
+     * @param canvas
+     */
     @Override
     protected void onDraw(Canvas canvas){
+        //Update the animations
         update();
-//        canvas.drawBitmap(scaledBackground, 0, 0, null);
+
+        //Redraw the background
         canvas.drawBitmap(background, 0, 0, null);
 
+        //Draw the blockades.
         for(Blockade block : blockades){
             block.onDraw(canvas);
         }
@@ -171,6 +158,10 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
 
     }
 
+    /**
+     * Where the magic happens.
+     * Update all the animations, check collisions, and take damage.
+     */
     private void update(){
         //
 //        if(sprites.size() <= 0){
@@ -229,45 +220,64 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
 //            builder.show();
 //        }
 
+        //Make sure that each list actually contains something, avoids divide by zero exceptions
         if(sprites.size() > 0&& blockades.size() > 0) {
-            tempBowser = sprites.get(0);
+            //Get the first (only for now) sprite.
+            tempEnemy = sprites.get(0);
+
+            //Assign to the first blockade.
             closestToBowser = blockades.get(0);
+
+            //Iterate through the blockades list
             for (Blockade block : blockades) {
+                //Check if the blockade has been destroyed by the enemy, if so add to the remove list.
                 if(!block.isStillStanding())
                     blockadesToRemove.add(block);
 
-                distanceFromBowser = tempBowser.getX() - block.getX();
-                if (distanceFromBowser > (block.getX() - closestToBowser.getX())) {
+                //Check how far the current blockade is from Bowser/enemy
+                distanceFromBowser = tempEnemy.getX() - block.getX();
+
+                //Store the closest blockade in the Enemy's path
+                if (distanceFromBowser > (block.getX() - closestToBowser.getX()) && distanceFromBowser > 0) {
                     closestToBowser = block;
                 }
             }
 
+            //Check if the enemy is still alive, remove if not.
             for(Sprite sprite : sprites){
                 if(!sprite.isAlive())
                     spritesToRemove.add(sprite);
             }
 
-            if (tempBowser.getX() + 30 > closestToBowser.getX()) {
+            //Check if an enemy has collided with a blockade
+            if (tempEnemy.getX() + 30 > closestToBowser.getX()) {
+                //Take damage, both enemy and blockade
                 closestToBowser.takeDamage(30);
-                tempBowser.takeDamage(closestToBowser.getPower());
-                tempBowser.setX((int)Math.floor(closestToBowser.getX()) - 80);
+                tempEnemy.takeDamage(closestToBowser.getPower());
+                tempEnemy.setX((int)Math.floor(closestToBowser.getX()) - 80);
             }
 
+            //If there are blockades to remove, do so.
             if(blockadesToRemove.size() > 0){
                 for(Blockade block : blockadesToRemove){
                     blockades.remove(block);
+                    blockadesToRemove.remove(block);
                 }
             }
 
+            //If there are sprites to remove, do so.
             if(spritesToRemove.size() > 0){
                 for(Sprite sprite : spritesToRemove){
                     sprites.remove(sprite);
+                    spritesToRemove.remove(sprite);
                 }
             }
 
+            //If there are blockades to add, do so.
             if(blockadesToAdd.size() > 0){
-                for(Blockade block : blockadesToRemove){
+                for(Blockade block : blockadesToAdd){
                     blockades.add(block);
+                    blockadesToAdd.remove(block);
                 }
             }
 
@@ -278,42 +288,94 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
     /**
      * Create a sprite and return it
      * @param resource - the int reference code to the Sprite sheet used to make the sprite
+     * @param health - passed to the constructor
+     * @param spriteColumns - passed to the constructor
      * @return - the new Sprite
      */
     private Sprite createSprite(int resource, int health, int spriteColumns){
+        //Create the bitmap and send to the constructor
         Bitmap bm = BitmapFactory.decodeResource(getResources(), resource);
         return new Sprite(this, bm, health, spriteColumns);
     }
 
+    /**
+     * When the user clicks, check if any of the blockade buttons are activated.  If so, create them.
+     * @param v
+     * @param event
+     * @return
+     */
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         x = event.getX();
         y = event.getY();
+
         switch(event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                //Create a blockade at the clicked location, locked Y location.
                 if(isEmerald()){
-                    Blockade emerald = new Blockade("emerald", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.rubblewall), 150, 200, true), x);
-                    blockades.add(emerald);
-                }else if(isConcrete()){
-                    Blockade concrete = new Blockade("concrete", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.templewall), 150, 200, true), x);
-                    blockades.add(concrete);
+                    if(blockades.isEmpty()) {
+                        Blockade emerald = new Blockade("emerald", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.rubblewall), 150, 200, true), x);
+                        blockades.add(emerald);
+                    }else{
+                        if(!blockadeInArea(x,y)){
+                            Blockade emerald = new Blockade("emerald", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.rubblewall), 150, 200, true), x);
+                            blockades.add(emerald);
+                        }
+                    }
+                }else if(isConcrete()) {
+                    if(blockades.isEmpty()) {
+                        Blockade concrete = new Blockade("concrete", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.templewall), 150, 200, true), x);
+                        blockades.add(concrete);
+                    }else{
+                        if(!blockadeInArea(x,y)){
+                            Blockade concrete = new Blockade("concrete", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.templewall), 150, 200, true), x);
+                            blockades.add(concrete);
+                        }
+                    }
                 }else if(isElectric()){
-                    Blockade electric = new Blockade("electric", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.electricalbarrier), 150, 200, true), x);
-                    blockades.add(electric);
+                    if(blockades.isEmpty()) {
+                        Blockade electric = new Blockade("electric", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.electricalbarrier), 150, 200, true), x);
+                        blockades.add(electric);
+                    }else{
+                        if(!blockadeInArea(x,y)){
+                            Blockade electric = new Blockade("electric", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.electricalbarrier), 150, 200, true), x);
+                            blockades.add(electric);
+                        }
+                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:
-//                x = me.getX();
-//                y = me.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
-//                x = me.getX();
-//                y = me.getY();
                 break;
         }
         return true;
     }
 
+    /**
+     * Check if a blockade is within range of another.
+     * @param x
+     * @param y
+     * @return blocked
+     */
+    private boolean blockadeInArea(float x, float y){
+        boolean blocked = false;
+        //Check if there is a blockade in the same general area.
+        if(!blockades.isEmpty()) {
+            for (Blockade block : blockades) {
+                if (x < block.getX() + 100 && x > block.getX() - 100) {
+                    Toast.makeText(mContext, "You cannot place a blockade this close to another.", Toast.LENGTH_SHORT).show();
+                    blocked = true;
+                }
+            }
+        }
+        return blocked;
+    }
+
+    /**
+     * Create the appropriate sprite for different levels.
+     * @param level
+     */
     private void levelSelect(int level){
         switch(level){
             case 1:
@@ -328,10 +390,7 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
         }
     }
 
-    public void setActivity(GameBoard parentActivity){
-        parent = parentActivity;
-    }
-
+    //Getters and Setters below.
     public boolean isEmerald() {
         return emerald;
     }
