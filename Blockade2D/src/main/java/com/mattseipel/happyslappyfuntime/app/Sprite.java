@@ -9,10 +9,17 @@ import android.graphics.Rect;
  */
 public class Sprite {
     private static final int SPRITE_SHEET_ROWS = 1;
-    private static final int SPRITE_SHEET_COLUMNS = 16;
+    private int spriteSheetColumns;
     private static final int MAX_SPEED = 10;
-    int x,y, xSpeed, ySpeed, height, width; //Position, speed, and dimensions
+    private int x;
+    private int y;
+    int xSpeed;
+    int ySpeed;
+    int height;
+    int width; //Position, speed, and dimensions
+    private int health = 50;
     private float boardWidth, boardHeight;
+    private boolean alive;
     Bitmap bm;
 //    SpecialView sv;
     GameBoardCustomView gameBoard;
@@ -20,17 +27,20 @@ public class Sprite {
 //    int direction = 0;      //direction of sprite
     int numFramesWide, numFramesHigh;
 
-    public Sprite(GameBoardCustomView gameBoard, Bitmap bm){
+    public Sprite(GameBoardCustomView gameBoard, Bitmap bm, int health, int spriteSheetColumns){
         this.gameBoard = gameBoard;
         this.bm = bm;
-        this.width = bm.getWidth() / SPRITE_SHEET_COLUMNS;
+        this.spriteSheetColumns = spriteSheetColumns;
+        this.width = bm.getWidth() / spriteSheetColumns;
         this.height = bm.getHeight() / SPRITE_SHEET_ROWS;
+        this.health = health;
 //        Random rnd = new Random();
 //        y = rnd.nextInt(500 - height);
 //        xSpeed = rnd.nextInt(MAX_SPEED * 2) - MAX_SPEED;
-        y = gameBoard.getHeight()/3;
-        x = -200;
+        setY(gameBoard.getHeight()/3);
+        setX(-200);
         xSpeed = 4;
+        setAlive(true);
     }
 //
 //    public Sprite(SpecialView sv, Bitmap bm, int numFramesWide, int numFramesHigh){
@@ -63,18 +73,21 @@ public class Sprite {
 //        //int srcY = direction * height;    //reading from example spritesheet rows
         //These rectangles are used to cut out areas on the sprite sheets
         Rect src = new Rect(srcX, 0, srcX + width, height);
-        Rect dst = new Rect(x, y, x+width, y+height);
+        Rect dst = new Rect(getX(), getY(), getX() +width, getY() +height);
         canvas.drawBitmap(bm, src, dst, null);
 
     }
 
     public void update(){
         //GameBoardCustomView
+        if(health <= 0)
+            setAlive(false);
+
         boardHeight = gameBoard.getHeight();
         boardWidth = gameBoard.getWidth();
 //        if(x > boardWidth - bm.getWidth()/SPRITE_SHEET_COLUMNS - xSpeed) xSpeed = -5;
 //        if(x + xSpeed < 0) xSpeed = 5;
-        x += xSpeed;
+        setX(getX() + xSpeed);
 //        currentFrame = ++currentFrame % SPRITE_SHEET_COLUMNS;
         //For the SurfaceViewExample class
         //Facing down
@@ -102,7 +115,7 @@ public class Sprite {
 //            //direction = 3;    //To change the direction of the sprite if need be
 //        }
 //
-        currentFrame = ++currentFrame % SPRITE_SHEET_COLUMNS;
+        currentFrame = ++currentFrame % spriteSheetColumns;
 //        try{
 //            Thread.sleep(100);
 //        }catch (InterruptedException e){
@@ -114,4 +127,40 @@ public class Sprite {
 //        y += ySpeed;
     }
 
+    public int takeDamage(int damage){
+        health -= damage;
+        return health;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
 }

@@ -55,4 +55,9 @@ public class GameLoop extends Thread{
             }
         }
     }
+
+    public void pause(){
+        this.pause();
+    }
+
 }

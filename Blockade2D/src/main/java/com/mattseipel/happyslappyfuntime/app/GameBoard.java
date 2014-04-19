@@ -86,9 +86,9 @@ public class GameBoard extends Activity {
             @Override
             public void onClick(View v) {
                 if(concreteBTN.isChecked())
-                    gameView.setEmerald(true);
+                    gameView.setConcrete(true);
                 else if(!concreteBTN.isChecked())
-                    gameView.setEmerald(false);
+                    gameView.setConcrete(false);
             }
         });
         menuBar.addView(concreteBTN);
@@ -103,9 +103,9 @@ public class GameBoard extends Activity {
             @Override
             public void onClick(View v) {
                 if(electricBTN.isChecked())
-                    gameView.setEmerald(true);
+                    gameView.setElectric(true);
                 else if(!electricBTN.isChecked())
-                    gameView.setEmerald(false);
+                    gameView.setElectric(false);
             }
         });
         menuBar.addView(electricBTN);
