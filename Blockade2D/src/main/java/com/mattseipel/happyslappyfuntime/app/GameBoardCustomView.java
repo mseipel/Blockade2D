@@ -172,6 +172,7 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
     }
 
     private void update(){
+        //
 //        if(sprites.size() <= 0){
 //            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 //            builder.setTitle("You win!");
