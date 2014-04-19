@@ -2,7 +2,6 @@ package com.mattseipel.happyslappyfuntime.app;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -29,7 +28,7 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
         bm = BitmapFactory.decodeResource(getResources(), R.drawable.dk_sprite);
         x = y = 0;
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(new GameBoardCustomView(this));
+        setContentView(R.layout.game_board);
     }
 
     @Override
@@ -56,7 +55,7 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
         }
 
         public void run(){
-            sprite = new Sprite(SpecialView.this, bm, 5, 1);
+//            sprite = new Sprite(SpecialView.this, bm, 5, 1);
 
             while(running){
                 //performs canvas drawing

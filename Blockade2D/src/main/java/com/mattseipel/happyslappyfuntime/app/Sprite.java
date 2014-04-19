@@ -4,10 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
-import com.mattseipel.happyslappyfuntime.app.SurfaceViewExample.SpecialView;
-
-import java.util.Random;
-
 /**
  * Created by Matt Seipel on 4/11/2014.
  */
@@ -18,7 +14,7 @@ public class Sprite {
     int x,y, xSpeed, ySpeed, height, width; //Position, speed, and dimensions
     private float boardWidth, boardHeight;
     Bitmap bm;
-    SpecialView sv;
+//    SpecialView sv;
     GameBoardCustomView gameBoard;
     int currentFrame = 0;   //Current frame of the sprite sheet
 //    int direction = 0;      //direction of sprite
@@ -36,30 +32,30 @@ public class Sprite {
         x = -200;
         xSpeed = 4;
     }
-
-    public Sprite(SpecialView sv, Bitmap bm, int numFramesWide, int numFramesHigh){
-        this.bm = bm;      //Store bitmap that is passed in
-        this.sv = sv;      //Store the view
-        this.numFramesHigh = numFramesHigh;     //Frames (height) in spritesheet
-        this.numFramesWide = numFramesWide;       //Frames (width) in spritesheet
-        height = bm.getHeight() / numFramesHigh;    //height of each individual sprite
-        width = bm.getWidth() / numFramesWide;       //width of each individual sprite
-        x = y = 0;      //Set position
-        xSpeed = 5;
-        ySpeed = 0;
-    }
-
-    public Sprite(SpecialView sv, Bitmap bm, int x, int y, int xSpeed, int numFramesWide, int numFramesHigh){
-        this.bm = bm;      //Store bitmap that is passed in
-        this.sv = sv;      //Store the view
-        this.numFramesHigh = numFramesHigh;     //Frames (height) in spritesheet
-        this.numFramesWide = numFramesWide;       //Frames (width) in spritesheet
-        height = bm.getHeight() / numFramesHigh;    //height of each individual sprite
-        width = bm.getWidth() / numFramesWide;       //width of each individual sprite
-        this.x = x;      //Set position
-        this.y = y;
-        this.xSpeed = xSpeed;
-    }
+//
+//    public Sprite(SpecialView sv, Bitmap bm, int numFramesWide, int numFramesHigh){
+//        this.bm = bm;      //Store bitmap that is passed in
+//        this.sv = sv;      //Store the view
+//        this.numFramesHigh = numFramesHigh;     //Frames (height) in spritesheet
+//        this.numFramesWide = numFramesWide;       //Frames (width) in spritesheet
+//        height = bm.getHeight() / numFramesHigh;    //height of each individual sprite
+//        width = bm.getWidth() / numFramesWide;       //width of each individual sprite
+//        x = y = 0;      //Set position
+//        xSpeed = 5;
+//        ySpeed = 0;
+//    }
+//
+//    public Sprite(SpecialView sv, Bitmap bm, int x, int y, int xSpeed, int numFramesWide, int numFramesHigh){
+//        this.bm = bm;      //Store bitmap that is passed in
+//        this.sv = sv;      //Store the view
+//        this.numFramesHigh = numFramesHigh;     //Frames (height) in spritesheet
+//        this.numFramesWide = numFramesWide;       //Frames (width) in spritesheet
+//        height = bm.getHeight() / numFramesHigh;    //height of each individual sprite
+//        width = bm.getWidth() / numFramesWide;       //width of each individual sprite
+//        this.x = x;      //Set position
+//        this.y = y;
+//        this.xSpeed = xSpeed;
+//    }
 
     public void onDraw(Canvas canvas){
         update();
