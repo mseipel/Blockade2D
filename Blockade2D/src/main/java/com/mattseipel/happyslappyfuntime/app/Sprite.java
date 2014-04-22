@@ -8,8 +8,9 @@ import android.graphics.Rect;
  * Created by Matt Seipel on 4/11/2014.
  */
 public class Sprite {
-    private static final int SPRITE_SHEET_ROWS = 1;
+    private int spriteSheetRows;
     private int spriteSheetColumns;
+    private int currentRow;
     private static final int MAX_SPEED = 10;
     private int x;
     private int y;
@@ -17,20 +18,21 @@ public class Sprite {
     int ySpeed;
     int height;
     int width; //Position, speed, and dimensions
+    private int frameWidth;
     private int health = 50;
     private float boardWidth, boardHeight;
     private boolean alive;
     Bitmap bm;
     GameBoardCustomView gameBoard;
-    int currentFrame = 0;   //Current frame of the sprite sheet
-    int numFramesWide, numFramesHigh;
+    private int currentFrame = 0;   //Current frame of the sprite sheet
 
-    public Sprite(GameBoardCustomView gameBoard, Bitmap bm, int health, int spriteSheetColumns){
+    public Sprite(GameBoardCustomView gameBoard, Bitmap bm, int health, int spriteSheetRows, int spriteSheetColumns){
         this.gameBoard = gameBoard;
         this.bm = bm;
         this.spriteSheetColumns = spriteSheetColumns;
+        this.spriteSheetRows = spriteSheetRows;
         this.width = bm.getWidth() / spriteSheetColumns;
-        this.height = bm.getHeight() / SPRITE_SHEET_ROWS;
+        this.height = bm.getHeight() / spriteSheetRows;
         this.health = health;
         setY(gameBoard.getHeight()/3);
         setX(-200);
@@ -39,8 +41,7 @@ public class Sprite {
     }
 
     public void onDraw(Canvas canvas){
-        update();
-        int srcX = currentFrame * width;
+        int srcX = getCurrentFrame() * width;
 //        //int srcY = direction * height;    //reading from example spritesheet rows
         //These rectangles are used to cut out areas on the sprite sheets
         Rect src = new Rect(srcX, 0, srcX + width, height);
@@ -82,7 +83,7 @@ public class Sprite {
 //        }
 //
         //Ensure that the current frame never exceeds the number of frames available
-        currentFrame = ++currentFrame % spriteSheetColumns;
+        currentFrame += currentFrame++ % spriteSheetColumns;
     }
 
     public int takeDamage(int damage){
@@ -120,5 +121,45 @@ public class Sprite {
 
     public void setAlive(boolean alive) {
         this.alive = alive;
+    }
+
+    public int getSpriteSheetRows() {
+        return spriteSheetRows;
+    }
+
+    public void setSpriteSheetRows(int spriteSheetRows) {
+        this.spriteSheetRows = spriteSheetRows;
+    }
+
+    public int getSpriteSheetColumns() {
+        return spriteSheetColumns;
+    }
+
+    public void setSpriteSheetColumns(int spriteSheetColumns) {
+        this.spriteSheetColumns = spriteSheetColumns;
+    }
+
+    public int getCurrentRow() {
+        return currentRow;
+    }
+
+    public void setCurrentRow(int currentRow) {
+        this.currentRow = currentRow;
+    }
+
+    public int getCurrentFrame() {
+        return currentFrame;
+    }
+
+    public void setCurrentFrame(int currentFrame) {
+        this.currentFrame = currentFrame;
+    }
+
+    public int getFrameWidth() {
+        return frameWidth;
+    }
+
+    public void setFrameWidth(int frameWidth) {
+        this.frameWidth = frameWidth;
     }
 }

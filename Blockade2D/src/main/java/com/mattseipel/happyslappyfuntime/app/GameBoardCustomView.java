@@ -163,6 +163,8 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
      * Update all the animations, check collisions, and take damage.
      */
     private void update(){
+        //Get the first (only for now) sprite.
+        tempEnemy = sprites.get(0);
         //
 //        if(sprites.size() <= 0){
 //            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -222,9 +224,6 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
 
         //Make sure that each list actually contains something, avoids divide by zero exceptions
         if(sprites.size() > 0&& blockades.size() > 0) {
-            //Get the first (only for now) sprite.
-            tempEnemy = sprites.get(0);
-
             //Assign to the first blockade.
             closestToBowser = blockades.get(0);
 
@@ -252,9 +251,13 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
             //Check if an enemy has collided with a blockade
             if (tempEnemy.getX() + 30 > closestToBowser.getX()) {
                 //Take damage, both enemy and blockade
+                ((Bowser)tempEnemy).attackAnimation();
                 closestToBowser.takeDamage(30);
                 tempEnemy.takeDamage(closestToBowser.getPower());
                 tempEnemy.setX((int)Math.floor(closestToBowser.getX()) - 80);
+            }
+            else {
+                ((Bowser)tempEnemy).walkAnimation();
             }
 
             //If there are blockades to remove, do so.
@@ -292,11 +295,11 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
      * @param spriteColumns - passed to the constructor
      * @return - the new Sprite
      */
-    private Sprite createSprite(int resource, int health, int spriteColumns){
-        //Create the bitmap and send to the constructor
-        Bitmap bm = BitmapFactory.decodeResource(getResources(), resource);
-        return new Sprite(this, bm, health, spriteColumns);
-    }
+//    private Sprite createSprite(int resource, int health, int spriteColumns){
+//        //Create the bitmap and send to the constructor
+//        Bitmap bm = BitmapFactory.decodeResource(getResources(), resource);
+//        return new Sprite(this, bm, health, spriteColumns);
+//    }
 
     /**
      * When the user clicks, check if any of the blockade buttons are activated.  If so, create them.
@@ -314,31 +317,43 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
                 //Create a blockade at the clicked location, locked Y location.
                 if(isEmerald()){
                     if(blockades.isEmpty()) {
-                        Blockade emerald = new Blockade("emerald", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.rubblewall), 150, 200, true), x);
-                        blockades.add(emerald);
+                        if(blockadeInPath(x,y)) {
+                            Blockade emerald = new Blockade("emerald", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),
+                                    R.drawable.rubblewall), 150, 200, true), x);
+                            blockades.add(emerald);
+                        }
                     }else{
                         if(!blockadeInArea(x,y)){
-                            Blockade emerald = new Blockade("emerald", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.rubblewall), 150, 200, true), x);
-                            blockades.add(emerald);
+                            if(blockadeInPath(x,y)) {
+                                Blockade emerald = new Blockade("emerald", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),
+                                        R.drawable.rubblewall), 150, 200, true), x);
+                                blockades.add(emerald);
+                            }
                         }
                     }
                 }else if(isConcrete()) {
                     if(blockades.isEmpty()) {
-                        Blockade concrete = new Blockade("concrete", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.templewall), 150, 200, true), x);
-                        blockades.add(concrete);
+                        if(blockadeInPath(x,y)) {
+                            Blockade concrete = new Blockade("concrete", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),
+                                    R.drawable.templewall), 150, 200, true), x);
+                            blockades.add(concrete);
+                        }
                     }else{
-                        if(!blockadeInArea(x,y)){
-                            Blockade concrete = new Blockade("concrete", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.templewall), 150, 200, true), x);
+                        if(!blockadeInArea(x,y) && blockadeInPath(x,y)){
+                            Blockade concrete = new Blockade("concrete", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),
+                                    R.drawable.templewall), 150, 200, true), x);
                             blockades.add(concrete);
                         }
                     }
                 }else if(isElectric()){
-                    if(blockades.isEmpty()) {
-                        Blockade electric = new Blockade("electric", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.electricalbarrier), 150, 200, true), x);
+                    if(blockades.isEmpty() && blockadeInPath(x,y)) {
+                        Blockade electric = new Blockade("electric", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),
+                                R.drawable.electricalbarrier), 150, 200, true), x);
                         blockades.add(electric);
                     }else{
-                        if(!blockadeInArea(x,y)){
-                            Blockade electric = new Blockade("electric", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.electricalbarrier), 150, 200, true), x);
+                        if(!blockadeInArea(x,y) && blockadeInPath(x,y)){
+                            Blockade electric = new Blockade("electric", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),
+                                    R.drawable.electricalbarrier), 150, 200, true), x);
                             blockades.add(electric);
                         }
                     }
@@ -373,19 +388,34 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
     }
 
     /**
+     * Checks to make sure that the blockade is in front of the enemy.
+     * @param x
+     * @param y
+     * @return
+     */
+    private boolean blockadeInPath(float x, float y){
+        if(x < tempEnemy.getX()){
+            Toast.makeText(mContext, "You must place blockades in front of the enemy.", Toast.LENGTH_SHORT).show();
+            return false;  //Blockade not in enemy's path
+        }
+
+        return true;
+    }
+
+    /**
      * Create the appropriate sprite for different levels.
      * @param level
      */
     private void levelSelect(int level){
         switch(level){
             case 1:
-                sprites.add(createSprite(R.drawable.dk_sprite, 25, 5));
+                sprites.add(new Bowser(mContext, this));
                 break;
             case 2:
-                sprites.add(createSprite(R.drawable.dk_sprite, 50, 5));
+//                sprites.add(createSprite(R.drawable.dk_sprite, 50, 5));
                 break;
             case 3:
-                sprites.add(createSprite(R.drawable.bowser_sprite, 100, 16));
+//                sprites.add(createSprite(R.drawable.bowser_sprite, 100, 16));
                 break;
         }
     }
