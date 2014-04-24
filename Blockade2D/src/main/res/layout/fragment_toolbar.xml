@@ -1,0 +1,93 @@
+<LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingTop="5dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#e89f40"
+    android:weightSum="1">
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/menuBTN"
+        android:background="@android:color/transparent"
+        android:src="@drawable/menu"
+        android:paddingStart="5dp" />
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="20dp">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:text="Brick"
+            android:onClick="brickClicked"
+            android:id="@+id/brickBTN"
+            android:checked="false" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:text="Concrete"
+            android:onClick="concreteClicked"
+            android:id="@+id/concreteBTN"
+            android:checked="false" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:text="Electric"
+            android:onClick="electricClicked"
+            android:id="@+id/electricBTN"
+            android:checked="false" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginLeft="30dp"
+        android:paddingTop="5dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="$"
+        android:textColor="@android:color/holo_green_dark"
+        android:textStyle="bold"
+        android:id="@+id/moneyLBL" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginLeft="2dp"
+        android:paddingTop="5dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="100"
+        android:textColor="@android:color/holo_green_dark"
+        android:textStyle="bold"
+        android:id="@+id/money" />
+
+
+    <ImageView
+        android:layout_width="42dp"
+        android:layout_height="39dp"
+        android:layout_marginLeft="15dp"
+        android:id="@+id/imageView"
+        android:src="@drawable/heart" />
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="100"
+        android:textColor="@android:color/holo_red_dark"
+        android:textStyle="bold"
+        android:id="@+id/health" />
+</LinearLayout>

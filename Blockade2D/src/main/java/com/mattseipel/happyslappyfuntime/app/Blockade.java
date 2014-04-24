@@ -31,8 +31,8 @@ public class Blockade {
     }
 
     private String determineType(String type){
-        if (type.equals("emerald")){
-            return "emerald";  //Tier 1
+        if (type.equals("brick")){
+            return "brick";  //Tier 1
         }else if(type.equals("concrete")){
             return "concrete";  //Tier 2
         }else if(type.equals("electric")){
@@ -43,7 +43,7 @@ public class Blockade {
     }
 
     private int initialHealth(String type){
-        if (type.equals("emerald")){
+        if (type.equals("brick")){
             return 50;  //Tier 1
         }else if(type.equals("concrete")){
             return 125;  //Tier 2
@@ -55,7 +55,7 @@ public class Blockade {
     }
 
     private int setBlockadePower(String type){
-        if (type.equals("emerald")){
+        if (type.equals("brick")){
             return 10;  //Tier 1
         }else if(type.equals("concrete")){
             return 20;  //Tier 2

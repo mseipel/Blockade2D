@@ -69,9 +69,9 @@ public class GameBoard extends Activity {
             @Override
             public void onClick(View v) {
                 if(brickBTN.isChecked())
-                    gameView.setEmerald(true);
+                    gameView.setBrick(true);
                 else if(!brickBTN.isChecked())
-                    gameView.setEmerald(false);
+                    gameView.setBrick(false);
             }
         });
         menuBar.addView(brickBTN);

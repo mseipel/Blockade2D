@@ -25,7 +25,7 @@ public class Bowser extends Sprite{
     int dyingSpriteRow = 2;
     int dyingSpriteRowFrameCount = 10;
 
-    int xSpeed = 6;
+    int xSpeed = 3;
 
     public Bowser(Context mContext, GameBoardCustomView gameBoard){
         super(gameBoard, BitmapFactory.decodeResource(mContext.getResources(), R.drawable.bowser_sprite), 500, 3, 16);

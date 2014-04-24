@@ -46,7 +46,7 @@ public class MainActivity extends Activity {
 
     //onClick method for startGameBTN
     public void startGame(View view){
-        Intent intent = new Intent(this, GameBoard.class);
+        Intent intent = new Intent(this, GameplayActivity.class);
         startActivity(intent);
     }
 

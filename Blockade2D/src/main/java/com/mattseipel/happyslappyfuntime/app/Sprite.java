@@ -42,9 +42,10 @@ public class Sprite {
 
     public void onDraw(Canvas canvas){
         int srcX = getCurrentFrame() * width;
+        int srcY = getCurrentRow() * height;
 //        //int srcY = direction * height;    //reading from example spritesheet rows
         //These rectangles are used to cut out areas on the sprite sheets
-        Rect src = new Rect(srcX, 0, srcX + width, height);
+        Rect src = new Rect(srcX, srcY, srcX + width, height);
         Rect dst = new Rect(getX(), getY(), getX() +width, getY() +height);
         canvas.drawBitmap(bm, src, dst, null);
 
