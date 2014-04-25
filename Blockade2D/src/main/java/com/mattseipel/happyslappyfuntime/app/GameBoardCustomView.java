@@ -23,6 +23,7 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
     //Instance variables for the game thread
     private SurfaceHolder holder;   //Used to create callback methods when the SurfaceView is created/changes
     private GameLoop gameLoop;      //The loop that runs the game, technically the engine
+    private GameplayActivity gameActivity;  //Used as a reference via context.
     AlertDialog ready;              //Alert dialog to start the game
     AlertDialog gameOver;           //Alert dialog for end of game
     boolean win;                    //Determine the outcome of the game.
@@ -75,6 +76,7 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
     public GameBoardCustomView(Context context, AttributeSet attrs) {
         super(context);
         mContext = context;
+        gameActivity = ((GameplayActivity)mContext);
         gameLoop = new GameLoop(this);
         holder = getHolder();       //Get the holder from the surface view
         setOnTouchListener(this);   //This class implements OnTouchListener, assign it.
@@ -187,7 +189,7 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
         //Get the first (only for now) sprite, if one exists.
         if (!sprites.isEmpty()) {
             tempEnemy = sprites.get(0);
-            ((GameplayActivity)mContext).runOnUiThread(new Runnable() {
+            gameActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     ((GameplayActivity) mContext).setHealth(tempEnemy.getHealth());
@@ -285,44 +287,50 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
                     //Create a blockade at the clicked location, locked Y location.
                     if (((GameplayActivity) mContext).isBrick()) {
                         if (blockades.isEmpty()) {
-                            if (blockadeInPath(x, y)) {
+                            if (blockadeInPath(x, y) && affordable("brick")) {
                                 Blockade brick = new Blockade("brick", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),
                                         R.drawable.rubblewall), 150, 200, true), x);
                                 blockades.add(brick);
+                                moneyAmount -= brick.getCost();
                             }
                         } else {
                             if (!blockadeInArea(x, y)) {
-                                if (blockadeInPath(x, y)) {
+                                if (blockadeInPath(x, y) && affordable("brick")) {
                                     Blockade brick = new Blockade("brick", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),
                                             R.drawable.rubblewall), 150, 200, true), x);
                                     blockades.add(brick);
+                                    moneyAmount -= brick.getCost();
                                 }
                             }
                         }
                     } else if (((GameplayActivity) mContext).isConcrete()) {
                         if (blockades.isEmpty()) {
-                            if (blockadeInPath(x, y)) {
+                            if (blockadeInPath(x, y) && affordable("concrete")) {
                                 Blockade concrete = new Blockade("concrete", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),
                                         R.drawable.templewall), 150, 200, true), x);
                                 blockades.add(concrete);
+                                moneyAmount -=concrete.getCost();
                             }
                         } else {
-                            if (!blockadeInArea(x, y) && blockadeInPath(x, y)) {
+                            if (!blockadeInArea(x, y) && blockadeInPath(x, y) && affordable("concrete")) {
                                 Blockade concrete = new Blockade("concrete", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),
                                         R.drawable.templewall), 150, 200, true), x);
                                 blockades.add(concrete);
+                                moneyAmount -= concrete.getCost();
                             }
                         }
                     } else if (((GameplayActivity) mContext).isElectric()) {
-                        if (blockades.isEmpty() && blockadeInPath(x, y)) {
+                        if (blockades.isEmpty() && blockadeInPath(x, y) && affordable("electric")) {
                             Blockade electric = new Blockade("electric", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),
                                     R.drawable.electricalbarrier), 150, 200, true), x);
                             blockades.add(electric);
+                            moneyAmount -= electric.getCost();
                         } else {
-                            if (!blockadeInArea(x, y) && blockadeInPath(x, y)) {
+                            if (!blockadeInArea(x, y) && blockadeInPath(x, y) && affordable("electric")) {
                                 Blockade electric = new Blockade("electric", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),
                                         R.drawable.electricalbarrier), 150, 200, true), x);
                                 blockades.add(electric);
+                                moneyAmount -= electric.getCost();
                             }
                         }
 
@@ -350,7 +358,8 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
         //Check if there is a blockade in the same general area.
         if (!blockades.isEmpty()) {
             for (Blockade block : blockades) {
-                if (x < block.getX() + 100 && x > block.getX() - 100) {
+                if (x < block.getX() +  gameActivity.getDeviceWidth()/20 &&
+                        x > block.getX() - gameActivity.getDeviceWidth()/20) {
                     Toast.makeText(mContext, "You cannot place a blockade this close to another.", Toast.LENGTH_SHORT).show();
                     blocked = true;
                 }
@@ -402,6 +411,30 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
 //                sprites.add(createSprite(R.drawable.bowser_sprite, 100, 16));
                 break;
         }
+    }
+
+    public boolean affordable(String type){
+        if(type.equals("brick")){
+            if(moneyAmount >= 25){
+                return true;
+            }else{
+                return false;
+            }
+        }else if(type.equals("concrete")){
+            if (moneyAmount >= 75){
+                return true;
+            }else{
+                return false;
+            }
+        }else if(type.equals("electric")){
+            if(moneyAmount >= 200){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        return false;
+
     }
 
     //Getters and Setters below.

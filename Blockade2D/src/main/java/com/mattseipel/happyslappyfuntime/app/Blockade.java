@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 public class Blockade {
     private float x;
     private float y;
+    private int cost;
     private Bitmap bm;
     private GameBoardCustomView gameBoard;
     private String type;
@@ -21,6 +22,7 @@ public class Blockade {
         this.bm = bm;
         this.setX(x);
         this.type = type;
+        cost = determineCost(type);
         type = determineType(type);
         y = gameBoard.getHeight()/3.2f;
         health = initialHealth(type);
@@ -40,11 +42,22 @@ public class Blockade {
         }
     }
 
+    private int determineCost(String type){
+        if (type.equals("brick")){
+            return 25;  //Brick blockade costs $25
+        }else if(type.equals("concrete")){
+            return 75;  //$75
+        }else if(type.equals("electric")){
+            return 200;  //$200
+        }
+        return -1;
+    }
+
     private int initialHealth(String type){
         if (type.equals("brick")){
             return 50;  //Tier 1
         }else if(type.equals("concrete")){
-            return 125;  //Tier 2
+            return 100;  //Tier 2
         }else if(type.equals("electric")){
             return 200;  //Tier 3
         }else{
@@ -54,9 +67,9 @@ public class Blockade {
 
     private int setBlockadePower(String type){
         if (type.equals("brick")){
-            return 20;  //Tier 1
+            return 30;  //Tier 1
         }else if(type.equals("concrete")){
-            return 30;  //Tier 2
+            return 45;  //Tier 2
         }else if(type.equals("electric")){
             return 50;  //Tier 3
         }else{
@@ -118,5 +131,13 @@ public class Blockade {
 
     public void setDPS(double dps) {
         this.dps = dps;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
     }
 }
