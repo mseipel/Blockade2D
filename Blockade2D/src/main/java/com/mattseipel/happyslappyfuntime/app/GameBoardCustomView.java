@@ -19,11 +19,14 @@ import java.util.ArrayList;
  * Created by Clayton on 4/10/2014.
  */
 public class GameBoardCustomView extends SurfaceView implements View.OnTouchListener {
-    Toolbar toolbar;
 
     //Instance variables for the game thread
     private SurfaceHolder holder;   //Used to create callback methods when the SurfaceView is created/changes
     private GameLoop gameLoop;      //The loop that runs the game, technically the engine
+    AlertDialog ready;              //Alert dialog to start the game
+    AlertDialog gameOver;           //Alert dialog for end of game
+    boolean win;                    //Determine the outcome of the game.
+    boolean endGame;
 
     //ArrayLists used for drawing and updating the objects
     private ArrayList<Sprite> sprites = new ArrayList<Sprite>();
@@ -56,90 +59,10 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
     private boolean concrete;
     private boolean electric;
 
-    /**
-     * Constructor for the GameBoardCustomView
-     * Accepts only Context as parameters.
-     * <p/>
-     * Store the context.  Initiate the GameLoop.  Store the Holder.  Assign OnTouchListener.
-     * Create callbacks with the holder (**surface created**, changed, and destroyed).
-     * <p/>
-     * Create an alert dialog to allow the player to say they are ready.  This allows the thread to
-     * start when OK is pressed so the thread does not start immediately causing frames to be skipped.
-     *
-     * @param context
-     */
-    public GameBoardCustomView(Context context) {
-        super(context);
-        mContext = context;
-        gameLoop = new GameLoop(this);
-        holder = getHolder();       //Get the holder from the surface view
-        setOnTouchListener(this);   //This class implements OnTouchListener, assign it.
-        holder.addCallback(new SurfaceHolder.Callback() {
-            /**
-             * When the surface is created, scale the background, and pop up the alert.
-             * @param holder
-             */
-            @Override
-            public void surfaceCreated(SurfaceHolder holder) {
-                //Set the thread to run when started.
-                gameLoop.setRunning(true);
-
-                //Get the height and the width for scaling.
-                canvasHeight = getHeight();
-                canvasWidth = getWidth();
-
-                //Scale the background image.
-                background = Bitmap.createScaledBitmap(background, (int) canvasWidth, (int) canvasHeight, true);
-
-                //Create and show the 'Ready?' dialog.
-                AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-                dialog.setTitle("Ready?");
-                dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    /**
-                     * Start the thread (game) upon clicking 'OK'.
-                     * @param dialog
-                     * @param which
-                     */
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        gameLoop.start();
-                        dialog.cancel();    //Close the dialog
-                    }
-                });
-                dialog.create();
-                dialog.show();      //Show the 'Ready?' dialog.
-
-                levelSelect(level);     //Add the appropriate sprite to the map.
-            }
-
-            //Not used for anything.
-            @Override
-            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            }
-
-            /**
-             * When the suface view is destroyed, join the threads, and pray for no crash.
-             * @param holder
-             */
-            @Override
-            public void surfaceDestroyed(SurfaceHolder holder) {
-                boolean retry = true;
-                gameLoop.setRunning(false);  //End the thread that the game is running on
-                while (retry) {
-                    try {
-                        gameLoop.join();
-                        retry = false;
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
+    double moneyAmount = 100;
 
     /**
      * Constructor for the GameBoardCustomView
-     * Accepts only Context as parameters.
      * <p/>
      * Store the context.  Initiate the GameLoop.  Store the Holder.  Assign OnTouchListener.
      * Create callbacks with the holder (**surface created**, changed, and destroyed).
@@ -184,11 +107,11 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         gameLoop.start();
-                        dialog.cancel();    //Close the dialog
+                        ready.cancel();    //Close the dialog
                     }
                 });
-                dialog.create();
-                dialog.show();      //Show the 'Ready?' dialog.
+                ready = dialog.create();
+                ready.show();      //Show the 'Ready?' dialog.
 
                 levelSelect(level);     //Add the appropriate sprite to the map.
             }
@@ -225,6 +148,9 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
      */
     @Override
     protected void onDraw(Canvas canvas) {
+        if(endGame)
+            endGame();
+
         //Update the animations
         update();
 
@@ -241,6 +167,15 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
             sprite.onDraw(canvas);
         }
 
+        if (win) {
+            endGame = true;
+            canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.youwin),
+                    ((GameplayActivity) mContext).getDeviceWidth() / 2 - 250, 150, null);
+        } else if (tempEnemy.getX() > ((GameplayActivity) mContext).getDeviceWidth()) {
+            endGame = true;
+            canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.youlose),
+                    ((GameplayActivity) mContext).getDeviceWidth() / 2 - 250, 150, null);
+        }
 
     }
 
@@ -249,142 +184,88 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
      * Update all the animations, check collisions, and take damage.
      */
     private void update() {
-//        Get the first (only for now) sprite.
-        tempEnemy = sprites.get(0);
-        //
-//        if(sprites.size() <= 0){
-//            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-//            builder.setTitle("You win!");
-//            if(level <= 2) {
-//                builder.setPositiveButton("Next Level?", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        level++;
-//                        blockades.clear();
-//                        sprites.clear();
-//                        switch (level) {
-//                            case 1:
-//                                sprites.add(createSprite(R.drawable.bowser_sprite, 100, 16));
-//                                break;
-//                            case 2:
-//                                sprites.add(createSprite(R.drawable.dk_sprite, 50, 5));
-//                                break;
-//                            case 3:
-//                                sprites.add(createSprite(R.drawable.bowser_sprite, 100, 16));
-//                                break;
-//                        }
-//
-//                    }
-//                });
-//            }
-//            else if(level == 3) {
-//                builder.setPositiveButton("Start Over?", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        level = 1;
-//                        blockades.clear();
-//                        sprites.clear();
-//                        switch (level) {
-//                            case 1:
-//                                break;
-//                            case 2:
-//                                sprites.add(createSprite(R.drawable.dk_sprite, 50, 5));
-//                                break;
-//                            case 3:
-//                                sprites.add(createSprite(R.drawable.bowser_sprite, 100, 16));
-//                                break;
-//                        }
-//
-//                    }
-//                });
-//            }
-//            builder.setNegativeButton("Quit", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    ((GameBoard)mContext).finish();
-//                }
-//            });
-//            builder.create();
-//            builder.show();
-//        }
+        //Get the first (only for now) sprite, if one exists.
+        if (!sprites.isEmpty()) {
+            tempEnemy = sprites.get(0);
+            ((GameplayActivity)mContext).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ((GameplayActivity) mContext).setHealth(tempEnemy.getHealth());
+                    ((GameplayActivity) mContext).setCash(moneyAmount);
+                }
+            });
 
-        //Make sure that each list actually contains something, avoids divide by zero exceptions
-        if (sprites.size() > 0 && blockades.size() > 0) {
-            //Assign to the first blockade.
-            closestToBowser = blockades.get(0);
+            //Make sure that blockades actually contains something, avoids divide by zero exceptions
+            if (!blockades.isEmpty()) {
+                //Assign to the first blockade.
+                closestToBowser = blockades.get(0);
 
-            //Iterate through the blockades list
-            for (Blockade block : blockades) {
-                //Check if the blockade has been destroyed by the enemy, if so add to the remove list.
-                if (!block.isStillStanding())
-                    blockadesToRemove.add(block);
+                //Iterate through the blockades list
+                for (Blockade block : blockades) {
+                    //Check if the blockade has been destroyed by the enemy, if so add to the remove list.
+                    if (!block.isStillStanding())
+                        blockadesToRemove.add(block);
 
-                //Check how far the current blockade is from Bowser/enemy
-                distanceFromBowser = tempEnemy.getX() - block.getX();
+                    //Check how far the current blockade is from Bowser/enemy
+                    distanceFromBowser = tempEnemy.getX() - block.getX();
 
-                //Store the closest blockade in the Enemy's path
-                if (distanceFromBowser > (block.getX() - closestToBowser.getX()) && distanceFromBowser > 0) {
-                    closestToBowser = block;
+                    //Store the closest blockade in the Enemy's path
+                    if (distanceFromBowser > (block.getX() - closestToBowser.getX()) && distanceFromBowser > 0) {
+                        closestToBowser = block;
+                    }
+                }
+
+                //Check if an enemy has collided with a blockade
+                if (tempEnemy.getX() + 35 > closestToBowser.getX()) {
+                    if (tempEnemy.getHealth() <= 0) {
+                        ((Bowser) tempEnemy).deathAnimation();
+                    } else {
+                        //Take damage, both enemy and blockade
+                        ((Bowser) tempEnemy).attackAnimation();
+                        closestToBowser.takeDamage(((Bowser) tempEnemy).getDps());
+                        tempEnemy.takeDamage(closestToBowser.getDPS());
+                        moneyAmount += closestToBowser.getDPS();
+                        tempEnemy.setX((int) Math.floor(closestToBowser.getX()) - 30);
+                        if (!closestToBowser.isStillStanding())
+                            ((Bowser) tempEnemy).walkAnimation();
+                    }
+                } else {
+                    ((Bowser) tempEnemy).walkAnimation();
+                }
+
+
+                //Check if the enemy is still alive, remove if not.
+                for (Sprite sprite : sprites) {
+                    if (!sprite.isAlive())
+                        spritesToRemove.add(sprite);
+                }
+
+                //If there are blockades to remove, do so.
+                if (!blockadesToRemove.isEmpty()) {
+                    for (Blockade block : blockadesToRemove) {
+                        blockades.remove(block);
+                        blockadesToRemove.remove(block);
+                    }
+                }
+
+                //If there are sprites to remove, do so.
+                if (!spritesToRemove.isEmpty()) {
+                    for (Sprite sprite : spritesToRemove) {
+                        sprites.remove(sprite);
+                        spritesToRemove.remove(sprite);
+                    }
+                }
+
+                //If there are blockades to add, do so.
+                if (!blockadesToAdd.isEmpty()) {
+                    for (Blockade block : blockadesToAdd) {
+                        blockades.add(block);
+                        blockadesToAdd.remove(block);
+                    }
                 }
             }
-
-            //Check if the enemy is still alive, remove if not.
-            for (Sprite sprite : sprites) {
-                if (!sprite.isAlive())
-                    spritesToRemove.add(sprite);
-            }
-
-            //Check if an enemy has collided with a blockade
-            if (tempEnemy.getX() + 30 > closestToBowser.getX()) {
-                //Take damage, both enemy and blockade
-                ((Bowser) tempEnemy).attackAnimation();
-                closestToBowser.takeDamage(30);
-                tempEnemy.takeDamage(closestToBowser.getPower());
-                tempEnemy.setX((int) Math.floor(closestToBowser.getX()) - 80);
-            } else {
-                ((Bowser) tempEnemy).walkAnimation();
-            }
-
-            //If there are blockades to remove, do so.
-            if (blockadesToRemove.size() > 0) {
-                for (Blockade block : blockadesToRemove) {
-                    blockades.remove(block);
-                    blockadesToRemove.remove(block);
-                }
-            }
-
-            //If there are sprites to remove, do so.
-            if (spritesToRemove.size() > 0) {
-                for (Sprite sprite : spritesToRemove) {
-                    sprites.remove(sprite);
-                    spritesToRemove.remove(sprite);
-                }
-            }
-
-            //If there are blockades to add, do so.
-            if (blockadesToAdd.size() > 0) {
-                for (Blockade block : blockadesToAdd) {
-                    blockades.add(block);
-                    blockadesToAdd.remove(block);
-                }
-            }
-
         }
-
     }
-
-    /**
-     * Create a sprite and return it
-     * @param resource - the int reference code to the Sprite sheet used to make the sprite
-     * @param health - passed to the constructor
-     * @param spriteColumns - passed to the constructor
-     * @return - the new Sprite
-     */
-//    private Sprite createSprite(int resource, int health, int spriteColumns){
-//        //Create the bitmap and send to the constructor
-//        Bitmap bm = BitmapFactory.decodeResource(getResources(), resource);
-//        return new Sprite(this, bm, health, spriteColumns);
-//    }
 
     /**
      * When the user clicks, check if any of the blockade buttons are activated.  If so, create them.
@@ -492,6 +373,16 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
         }
 
         return true;
+    }
+
+    public void endGame() {
+        gameLoop.terminate();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        ((GameplayActivity) mContext).finish();
     }
 
     /**

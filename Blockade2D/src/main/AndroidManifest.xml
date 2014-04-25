@@ -39,7 +39,7 @@
         </activity>
         <activity
             android:name="com.mattseipel.happyslappyfuntime.app.GameplayActivity"
-            android:label="@string/title_activity_gameplay" >
+            android:label="@string/title_activity_gameplay"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>

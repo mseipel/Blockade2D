@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:paddingTop="5dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#e89f40"
+    android:background="#000000"
     android:weightSum="1">
 
     <ImageButton
@@ -19,13 +19,13 @@
         android:layout_width="wrap_content"
         android:layout_height="44dp"
         android:orientation="horizontal"
-        android:layout_marginLeft="20dp">
+        android:layout_marginLeft="30dp">
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
-            android:text="Brick"
+            android:text="Brick \n$50"
             android:onClick="brickClicked"
             android:id="@+id/brickBTN"
             android:checked="false" />
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
-            android:text="Concrete"
+            android:text="Concrete \n$100"
             android:onClick="concreteClicked"
             android:id="@+id/concreteBTN"
             android:checked="false" />
@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
-            android:text="Electric"
+            android:text="Electric \n$200"
             android:onClick="electricClicked"
             android:id="@+id/electricBTN"
             android:checked="false" />
@@ -52,7 +52,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_marginLeft="30dp"
+        android:layout_marginLeft="40dp"
         android:paddingTop="5dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="$"

@@ -9,13 +9,11 @@ import android.graphics.Canvas;
 public class Blockade {
     private float x;
     private float y;
-    private float boardWidth;
-    private float boardHeight; //Track placement of the blockades
     private Bitmap bm;
     private GameBoardCustomView gameBoard;
     private String type;
-    private int health;
-    private int power;
+    private double health;
+    private double dps;
     private boolean stillStanding;
 
     public Blockade(String type, GameBoardCustomView gameBoard, Bitmap bm, float x){
@@ -24,10 +22,10 @@ public class Blockade {
         this.setX(x);
         this.type = type;
         type = determineType(type);
-        setY(gameBoard.getHeight()/3.2f);
-        setHealth(initialHealth(type));
-        setPower(setBlockadePower(type));
-        setStillStanding(true);
+        y = gameBoard.getHeight()/3.2f;
+        health = initialHealth(type);
+        dps = setBlockadePower(type)/20;    //20 frames per second, divide power by 20 for dps
+        stillStanding = true;
     }
 
     private String determineType(String type){
@@ -56,11 +54,11 @@ public class Blockade {
 
     private int setBlockadePower(String type){
         if (type.equals("brick")){
-            return 10;  //Tier 1
+            return 20;  //Tier 1
         }else if(type.equals("concrete")){
-            return 20;  //Tier 2
+            return 30;  //Tier 2
         }else if(type.equals("electric")){
-            return 30;  //Tier 3
+            return 50;  //Tier 3
         }else{
             return -1;
         }
@@ -71,10 +69,10 @@ public class Blockade {
         canvas.drawBitmap(bm, getX(), getY(), null);
     }
 
-    public void takeDamage(int power){
-        if(health - power <= 0)
+    public void takeDamage(double dps){
+        if(health - dps <= 0)
             stillStanding = false;
-        health -= power;
+        health -= dps;
     }
 
     private void update(){
@@ -98,11 +96,11 @@ public class Blockade {
         this.y = y;
     }
 
-    public int getHealth() {
+    public double getHealth() {
         return health;
     }
 
-    public void setHealth(int health) {
+    public void setHealth(double health) {
         this.health = health;
     }
 
@@ -114,11 +112,11 @@ public class Blockade {
         this.stillStanding = stillStanding;
     }
 
-    public int getPower() {
-        return power;
+    public double getDPS() {
+        return dps;
     }
 
-    public void setPower(int power) {
-        this.power = power;
+    public void setDPS(double dps) {
+        this.dps = dps;
     }
 }

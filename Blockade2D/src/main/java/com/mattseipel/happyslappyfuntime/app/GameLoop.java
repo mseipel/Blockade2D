@@ -6,9 +6,9 @@ import android.graphics.Canvas;
  * Created by Matt Seipel on 4/13/2014.
  */
 public class GameLoop extends Thread{
-    static final long FPS = 10;
+    static final long FPS = 15;
     private GameBoardCustomView view;
-    private boolean running = false;
+    private volatile boolean running = false;
 
     public GameLoop(GameBoardCustomView view){
         this.view = view;
@@ -58,6 +58,10 @@ public class GameLoop extends Thread{
 
     public void pause(){
         this.pause();
+    }
+
+    public void terminate(){
+        running = false;
     }
 
 }

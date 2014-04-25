@@ -7,12 +7,13 @@ import android.graphics.Canvas;
 /**
  * Created by Clayton on 4/4/2014.
  */
-public class Bowser extends Sprite{
+public class Bowser extends Enemy{
     Context mContext;
     boolean dying = false;
     boolean attacking = false;
     boolean walking = true;
 
+    int defaultSpeed = 3;
     int startingPosition = -200;
 
     int walkSpriteRow = 0;
@@ -21,16 +22,15 @@ public class Bowser extends Sprite{
     int attackSpriteRow = 1;
     int attackSpriteRowFrameCount = 5;
 
-    int dyingSpriteWidth = 81;
     int dyingSpriteRow = 2;
-    int dyingSpriteRowFrameCount = 10;
+    int dyingSpriteRowFrameCount = 16;
 
-    int xSpeed = 3;
 
     public Bowser(Context mContext, GameBoardCustomView gameBoard){
-        super(gameBoard, BitmapFactory.decodeResource(mContext.getResources(), R.drawable.bowser_sprite), 500, 3, 16);
+        super(gameBoard, BitmapFactory.decodeResource(mContext.getResources(), R.drawable.bowser_sprite), 1000, 3, 16);
         this.mContext = mContext;
         setX(-200);
+        setDps(50/20);   //20 frames per second locked into GameLoop, this will be 10 damage per second.
     }
 
     public void attackAnimation(){
@@ -39,8 +39,9 @@ public class Bowser extends Sprite{
         attacking = true;
 
         //Set the attack row to current, and set number of frames
-        setCurrentRow(1);
-        setSpriteSheetColumns(5);
+        setxSpeed(0);
+        setCurrentRow(attackSpriteRow);
+        setSpriteSheetColumns(attackSpriteRowFrameCount);
     }
 
     public void walkAnimation(){
@@ -49,8 +50,9 @@ public class Bowser extends Sprite{
         walking = true;
 
         //Set the walking row to current, and set number of frames
-        setCurrentRow(0);
-        setSpriteSheetColumns(16);
+        setxSpeed(defaultSpeed);
+        setCurrentRow(walkSpriteRow);
+        setSpriteSheetColumns(walkSpriteRowFrameCount);
     }
 
     public void deathAnimation(){
@@ -58,10 +60,16 @@ public class Bowser extends Sprite{
         attacking = false;
         walking = false;
         dying = true;
-
+        //+2 to protect against the gameLoop moving faster than the following statements.
+        if((getCurrentFrame() + 2) % getSpriteSheetColumns() == 0){
+            setDeathComplete(true);
+            setAlive(false);
+            getGameBoard().win = true;
+        }
         //Set death row to current, and set number of frames
-        setCurrentRow(2);
-        setSpriteSheetColumns(10);
+        setxSpeed(0);
+        setCurrentRow(dyingSpriteRow);
+        setSpriteSheetColumns(dyingSpriteRowFrameCount);
     }
 
     public void update(){
@@ -70,10 +78,11 @@ public class Bowser extends Sprite{
 
             if(getCurrentFrame() == getSpriteSheetColumns()){
                 setAlive(false);
+
             }
         }
 
-        setX(getX() + xSpeed);
+        setX(getX() + getxSpeed());
 
         //Ensure that the current frame never exceeds the number of frames available
         setCurrentFrame((getCurrentFrame() + 1) % getSpriteSheetColumns());
