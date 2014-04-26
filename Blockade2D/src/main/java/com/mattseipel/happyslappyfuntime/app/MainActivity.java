@@ -51,13 +51,14 @@ public class MainActivity extends Activity {
 
     //onClick method for startGameBTN
     public void startGame(View view){
-        Intent intent = new Intent(this, GameplayActivity.class);
-        startActivity(intent);
+        Intent gameIntent = new Intent(this, GameplayActivity.class);
+        startActivity(gameIntent);
     }
 
     //onClick method for rulesBTN
     public void showRules(View view){
-
+        Intent rulesIntent = new Intent(this, RulesPage.class);
+        startActivity(rulesIntent);
     }
 
     //onClick method for quitBTN
