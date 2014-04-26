@@ -24,20 +24,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.mattseipel.happyslappyfuntime.app.AnimationTesting"
-            android:label="@string/title_activity_animation_testing" >
-        </activity>
-        <activity
-            android:name="com.mattseipel.happyslappyfuntime.app.SurfaceViewExample"
-            android:label="@string/title_activity_surface_view_example" >
-        </activity>
-        <activity
-            android:name="com.mattseipel.happyslappyfuntime.app.GameBoard"
-            android:label="Blockade2D"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
-        <activity
             android:name="com.mattseipel.happyslappyfuntime.app.GameplayActivity"
             android:label="@string/title_activity_gameplay"
             android:screenOrientation="landscape"

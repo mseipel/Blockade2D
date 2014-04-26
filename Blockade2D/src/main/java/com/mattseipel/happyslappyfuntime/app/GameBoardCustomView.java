@@ -41,7 +41,7 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
 
     //Store the background for scaling and drawing
     private Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.level1);
-    private Context mContext;           //Store the GameBoard context for later use (assigned in constructor)
+    private Context mContext;           //Store the GameplayActivty context for later use (assigned in constructor)
 
     //Variables essential to collision detection.
     private Sprite tempEnemy;
@@ -172,11 +172,11 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
         if (win) {
             endGame = true;
             canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.youwin),
-                    ((GameplayActivity) mContext).getDeviceWidth() / 2 - 250, 150, null);
-        } else if (tempEnemy.getX() > ((GameplayActivity) mContext).getDeviceWidth()) {
+                    gameActivity.getDeviceWidth() / 2 - 250, 150, null);
+        } else if (tempEnemy.getX() > gameActivity.getDeviceWidth()) {
             endGame = true;
             canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.youlose),
-                    ((GameplayActivity) mContext).getDeviceWidth() / 2 - 250, 150, null);
+                    gameActivity.getDeviceWidth() / 2 - 250, 150, null);
         }
 
     }
@@ -192,8 +192,8 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
             gameActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ((GameplayActivity) mContext).setHealth(tempEnemy.getHealth());
-                    ((GameplayActivity) mContext).setCash(moneyAmount);
+                    gameActivity.setHealth(tempEnemy.getHealth());
+                    gameActivity.setCash(moneyAmount);
                 }
             });
 
@@ -204,6 +204,10 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
 
                 //Iterate through the blockades list
                 for (Blockade block : blockades) {
+                    //Determine closestToBowser
+                    if(block.getX() - tempEnemy.getX() < closestToBowser.getX() - tempEnemy.getX())
+                        closestToBowser = block;
+
                     //Check if the blockade has been destroyed by the enemy, if so add to the remove list.
                     if (!block.isStillStanding())
                         blockadesToRemove.add(block);
@@ -283,54 +287,62 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                //Block off the very top and bottom (fragment area) of the map from touches
                 if (y < canvasHeight - 150 && y > 150) {
                     //Create a blockade at the clicked location, locked Y location.
-                    if (((GameplayActivity) mContext).isBrick()) {
+                    if (gameActivity.isBrick()) {
+                        //If there are currently no blockades,
                         if (blockades.isEmpty()) {
-                            if (blockadeInPath(x, y) && affordable("brick")) {
-                                Blockade brick = new Blockade("brick", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),
-                                        R.drawable.rubblewall), 150, 200, true), x);
-                                blockades.add(brick);
-                                moneyAmount -= brick.getCost();
-                            }
-                        } else {
-                            if (!blockadeInArea(x, y)) {
-                                if (blockadeInPath(x, y) && affordable("brick")) {
-                                    Blockade brick = new Blockade("brick", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),
-                                            R.drawable.rubblewall), 150, 200, true), x);
+                            if (blockadeInPath(x, y)) {
+                                if(affordable('b')){
+                                    Brick brick = new Brick(mContext, x);
                                     blockades.add(brick);
                                     moneyAmount -= brick.getCost();
                                 }
                             }
+                        } else {
+                            if (!blockadeInArea(x, y)) {
+                                if (blockadeInPath(x, y)) {
+                                    if(affordable('b')){
+                                        Brick brick = new Brick(mContext, x);
+                                        blockades.add(brick);
+                                        moneyAmount -= brick.getCost();
+                                    }
+                                }
+                            }
                         }
-                    } else if (((GameplayActivity) mContext).isConcrete()) {
+                    } else if (gameActivity.isConcrete()) {
                         if (blockades.isEmpty()) {
-                            if (blockadeInPath(x, y) && affordable("concrete")) {
-                                Blockade concrete = new Blockade("concrete", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),
-                                        R.drawable.templewall), 150, 200, true), x);
-                                blockades.add(concrete);
-                                moneyAmount -=concrete.getCost();
+                            if (blockadeInPath(x, y)) {
+                                if(affordable('c')){
+                                    Concrete concrete = new Concrete(mContext, x);
+                                    blockades.add(concrete);
+                                    moneyAmount -=concrete.getCost();
+                                }
                             }
                         } else {
-                            if (!blockadeInArea(x, y) && blockadeInPath(x, y) && affordable("concrete")) {
-                                Blockade concrete = new Blockade("concrete", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),
-                                        R.drawable.templewall), 150, 200, true), x);
-                                blockades.add(concrete);
-                                moneyAmount -= concrete.getCost();
+                            if (!blockadeInArea(x, y) && blockadeInPath(x, y)) {
+                                if(affordable('c')){
+                                    Concrete concrete = new Concrete(mContext, x);
+                                    blockades.add(concrete);
+                                    moneyAmount -= concrete.getCost();
+                                }
                             }
                         }
-                    } else if (((GameplayActivity) mContext).isElectric()) {
-                        if (blockades.isEmpty() && blockadeInPath(x, y) && affordable("electric")) {
-                            Blockade electric = new Blockade("electric", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),
-                                    R.drawable.electricalbarrier), 150, 200, true), x);
-                            blockades.add(electric);
-                            moneyAmount -= electric.getCost();
-                        } else {
-                            if (!blockadeInArea(x, y) && blockadeInPath(x, y) && affordable("electric")) {
-                                Blockade electric = new Blockade("electric", this, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),
-                                        R.drawable.electricalbarrier), 150, 200, true), x);
+                    } else if (gameActivity.isElectric()) {
+                        if (blockades.isEmpty() && blockadeInPath(x, y)) {
+                            if(affordable('e')){
+                                Electric electric = new Electric(mContext, x);
                                 blockades.add(electric);
                                 moneyAmount -= electric.getCost();
+                            }
+                        } else {
+                            if (!blockadeInArea(x, y) && blockadeInPath(x, y)) {
+                                if(affordable('e')){
+                                    Electric electric = new Electric(mContext, x);
+                                    blockades.add(electric);
+                                    moneyAmount -= electric.getCost();
+                                }
                             }
                         }
 
@@ -391,7 +403,7 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        ((GameplayActivity) mContext).finish();
+        gameActivity.finish();
     }
 
     /**
@@ -413,28 +425,35 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
         }
     }
 
-    public boolean affordable(String type){
-        if(type.equals("brick")){
-            if(moneyAmount >= 25){
-                return true;
-            }else{
+    public boolean affordable(char type){
+        switch (type){
+            case 'b':
+                if(moneyAmount >= Brick.getCost()){
+                    return true;
+                }else{
+                    Toast.makeText(mContext, "You need $" + (int)(Brick.getCost()-moneyAmount) + " more dollars to buy this.",
+                            Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            case 'c':
+                if (moneyAmount >= Concrete.getCost()){
+                    return true;
+                }else{
+                    Toast.makeText(mContext, "You need $" + (int)(Concrete.getCost()-moneyAmount) + " more dollars to buy this.",
+                            Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            case 'e':
+                if(moneyAmount >= Electric.getCost()){
+                    return true;
+                }else{
+                    Toast.makeText(mContext, "You need $" + (int)(Electric.getCost()-moneyAmount) + " more dollars to buy this.",
+                            Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            default:
                 return false;
-            }
-        }else if(type.equals("concrete")){
-            if (moneyAmount >= 75){
-                return true;
-            }else{
-                return false;
-            }
-        }else if(type.equals("electric")){
-            if(moneyAmount >= 200){
-                return true;
-            }else{
-                return false;
-            }
         }
-        return false;
-
     }
 
     //Getters and Setters below.
