@@ -8,25 +8,45 @@ import android.graphics.Rect;
  * Created by Matt Seipel on 4/11/2014.
  */
 public class Sprite {
+    //Sprite sheet variables
     private int spriteSheetRows;
     private int spriteSheetColumns;
     private int currentRow;
-    private static final int MAX_SPEED = 10;
-    private int x;
-    private int y;
-    private int xSpeed;
-    int ySpeed;
-    int height;
-    int width; //Position, speed, and dimensions
-    private int frameWidth;
-    private int health;
-    private float boardWidth, boardHeight;
-    private boolean alive;
-    private boolean deathComplete;
-    Bitmap bm;
-    private GameBoardCustomView gameBoard;
     private int currentFrame = 0;   //Current frame of the sprite sheet
 
+
+    //X and Y coordinates for moving
+    private int x;
+    private int y;
+
+    //Movement speed
+    private int xSpeed;
+
+    //Height and width of the sprite frames
+    int height;
+    int width;
+
+    //Health variables
+    private int health;
+
+    //Living variables
+    private boolean alive;
+    private boolean deathComplete;
+
+    //Sprite sheet bitmap
+    private Bitmap bm;
+
+    //Game board reference
+    private GameBoardCustomView gameBoard;
+
+    /**
+     * Create the sprite object.
+     * @param gameBoard
+     * @param bm
+     * @param health
+     * @param spriteSheetRows
+     * @param spriteSheetColumns
+     */
     public Sprite(GameBoardCustomView gameBoard, Bitmap bm, int health, int spriteSheetRows, int spriteSheetColumns){
         this.gameBoard = gameBoard;
         this.bm = bm;
@@ -41,31 +61,44 @@ public class Sprite {
         setAlive(true);
     }
 
+    /**
+     * Redraw the sprite, changing frames each time.
+     * @param canvas
+     */
     public void onDraw(Canvas canvas){
         int srcX = currentFrame * width;
         int srcY = currentRow * height;
-//        //int srcY = direction * height;    //reading from example spritesheet rows
+
         //These rectangles are used to cut out areas on the sprite sheets
         Rect src = new Rect(srcX, srcY, srcX + width, srcY + height);
         Rect dst = new Rect(getX(), getY(), getX() + width, getY() + height);
+
+        //Draw cut out frame
         canvas.drawBitmap(bm, src, dst, null);
 
     }
 
+    /**
+     * Update the X coordinate of the sprite.
+     */
     public void update(){
-        boardHeight = getGameBoard().getHeight();
-        boardWidth = getGameBoard().getWidth();
         setX(getX() + getxSpeed());
 
         //Ensure that the current frame never exceeds the number of frames available
         currentFrame = currentFrame++ % spriteSheetColumns;
     }
 
+    /**
+     * Take damage and subtract from health
+     * @param damage
+     * @return
+     */
     public double takeDamage(double damage){
         health -= damage;
         return health;
     }
 
+    //------------GETTERS AND SETTERS-------------------
     public int getX() {
         return x;
     }
@@ -86,10 +119,6 @@ public class Sprite {
         return health;
     }
 
-    public void setHealth(int health) {
-        this.health = health;
-    }
-
     public boolean isAlive() {
         return alive;
     }
@@ -98,24 +127,12 @@ public class Sprite {
         this.alive = alive;
     }
 
-    public int getSpriteSheetRows() {
-        return spriteSheetRows;
-    }
-
-    public void setSpriteSheetRows(int spriteSheetRows) {
-        this.spriteSheetRows = spriteSheetRows;
-    }
-
     public int getSpriteSheetColumns() {
         return spriteSheetColumns;
     }
 
     public void setSpriteSheetColumns(int spriteSheetColumns) {
         this.spriteSheetColumns = spriteSheetColumns;
-    }
-
-    public int getCurrentRow() {
-        return currentRow;
     }
 
     public void setCurrentRow(int currentRow) {
@@ -130,14 +147,6 @@ public class Sprite {
         this.currentFrame = currentFrame;
     }
 
-    public int getFrameWidth() {
-        return frameWidth;
-    }
-
-    public void setFrameWidth(int frameWidth) {
-        this.frameWidth = frameWidth;
-    }
-
     public int getxSpeed() {
         return xSpeed;
     }
@@ -150,15 +159,7 @@ public class Sprite {
         this.deathComplete = deathComplete;
     }
 
-    public boolean isDeathComplete(){
-        return deathComplete;
-    }
-
     public GameBoardCustomView getGameBoard() {
         return gameBoard;
-    }
-
-    public void setGameBoard(GameBoardCustomView gameBoard) {
-        this.gameBoard = gameBoard;
     }
 }

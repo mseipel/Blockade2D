@@ -41,6 +41,7 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
 
     //Store the background for scaling and drawing
     private Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.level1);
+    private Bitmap endGameScreen;
     private Context mContext;           //Store the GameplayActivty context for later use (assigned in constructor)
 
     //Variables essential to collision detection.
@@ -50,6 +51,7 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
 
     //Current level, determines the enemy
     private int level = 1;
+    private int bowsersKilled = 0;
 
     //Store the height and width of the canvas, used for scaling the background
     private float canvasHeight;
@@ -112,9 +114,13 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
                         ready.cancel();    //Close the dialog
                     }
                 });
+                //Force the user to click "OK"
+                dialog.setCancelable(false);
                 ready = dialog.create();
                 ready.show();      //Show the 'Ready?' dialog.
 
+                //Originally levels with different enemies, now it is just where Bowser is created.
+                //The method still exists for future use.
                 levelSelect(level);     //Add the appropriate sprite to the map.
             }
 
@@ -150,6 +156,7 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
      */
     @Override
     protected void onDraw(Canvas canvas) {
+        //Check if the game is over
         if(endGame)
             endGame();
 
@@ -169,14 +176,16 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
             sprite.onDraw(canvas);
         }
 
+        //Determine which image will pop up.  They are not centered because 0 is reading at the
+        //middle of the screen for whatever reason.
         if (win) {
             endGame = true;
-            canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.youwin),
-                    gameActivity.getDeviceWidth() / 2 - 250, 150, null);
+            endGameScreen = BitmapFactory.decodeResource(getResources(), R.drawable.youwin);
+            canvas.drawBitmap(endGameScreen, -250f, 150f, null);
         } else if (tempEnemy.getX() > gameActivity.getDeviceWidth()) {
             endGame = true;
             canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.youlose),
-                    gameActivity.getDeviceWidth() / 2 - 250, 150, null);
+                    gameActivity.getDeviceWidth() / 2 - 400, 150, null);
         }
 
     }
@@ -194,6 +203,7 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
                 public void run() {
                     gameActivity.setHealth(tempEnemy.getHealth());
                     gameActivity.setCash(moneyAmount);
+                    gameActivity.setScore(bowsersKilled);
                 }
             });
 
@@ -240,34 +250,43 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
                 }
 
 
-                //Check if the enemy is still alive, remove if not.
-                for (Sprite sprite : sprites) {
-                    if (!sprite.isAlive())
-                        spritesToRemove.add(sprite);
-                }
 
-                //If there are blockades to remove, do so.
-                if (!blockadesToRemove.isEmpty()) {
-                    for (Blockade block : blockadesToRemove) {
-                        blockades.remove(block);
-                        blockadesToRemove.remove(block);
+
+            }
+
+            //Check if the enemy is still alive, remove if not.
+            for (Sprite sprite : sprites) {
+                if (!sprite.isAlive())
+                    spritesToRemove.add(sprite);
+            }
+
+            //If there are blockades to remove, do so.
+            if (!blockadesToRemove.isEmpty()) {
+                for (Blockade block : blockadesToRemove) {
+                    blockades.remove(block);
+                    blockadesToRemove.remove(block);
+                }
+            }
+
+            //If there are sprites to remove, do so.
+            if (!spritesToRemove.isEmpty()) {
+                for (Sprite sprite : spritesToRemove) {
+                    sprites.remove(sprite);
+                    spritesToRemove.remove(sprite);
+                    bowsersKilled++;
+                    if(bowsersKilled < 5){
+                        respawn();
+                    } else{
+                        win = true;
                     }
                 }
+            }
 
-                //If there are sprites to remove, do so.
-                if (!spritesToRemove.isEmpty()) {
-                    for (Sprite sprite : spritesToRemove) {
-                        sprites.remove(sprite);
-                        spritesToRemove.remove(sprite);
-                    }
-                }
-
-                //If there are blockades to add, do so.
-                if (!blockadesToAdd.isEmpty()) {
-                    for (Blockade block : blockadesToAdd) {
-                        blockades.add(block);
-                        blockadesToAdd.remove(block);
-                    }
+            //If there are blockades to add, do so.
+            if (!blockadesToAdd.isEmpty()) {
+                for (Blockade block : blockadesToAdd) {
+                    blockades.add(block);
+                    blockadesToAdd.remove(block);
                 }
             }
         }
@@ -296,7 +315,7 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
                             if (blockadeInPath(x, y)) {
                                 if(affordable('b')){
                                     Brick brick = new Brick(mContext, x);
-                                    blockades.add(brick);
+                                    blockadesToAdd.add(brick);
                                     moneyAmount -= brick.getCost();
                                 }
                             }
@@ -305,7 +324,7 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
                                 if (blockadeInPath(x, y)) {
                                     if(affordable('b')){
                                         Brick brick = new Brick(mContext, x);
-                                        blockades.add(brick);
+                                        blockadesToAdd.add(brick);
                                         moneyAmount -= brick.getCost();
                                     }
                                 }
@@ -316,7 +335,7 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
                             if (blockadeInPath(x, y)) {
                                 if(affordable('c')){
                                     Concrete concrete = new Concrete(mContext, x);
-                                    blockades.add(concrete);
+                                    blockadesToAdd.add(concrete);
                                     moneyAmount -=concrete.getCost();
                                 }
                             }
@@ -324,7 +343,7 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
                             if (!blockadeInArea(x, y) && blockadeInPath(x, y)) {
                                 if(affordable('c')){
                                     Concrete concrete = new Concrete(mContext, x);
-                                    blockades.add(concrete);
+                                    blockadesToAdd.add(concrete);
                                     moneyAmount -= concrete.getCost();
                                 }
                             }
@@ -333,14 +352,14 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
                         if (blockades.isEmpty() && blockadeInPath(x, y)) {
                             if(affordable('e')){
                                 Electric electric = new Electric(mContext, x);
-                                blockades.add(electric);
+                                blockadesToAdd.add(electric);
                                 moneyAmount -= electric.getCost();
                             }
                         } else {
                             if (!blockadeInArea(x, y) && blockadeInPath(x, y)) {
                                 if(affordable('e')){
                                     Electric electric = new Electric(mContext, x);
-                                    blockades.add(electric);
+                                    blockadesToAdd.add(electric);
                                     moneyAmount -= electric.getCost();
                                 }
                             }
@@ -396,6 +415,9 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
         return true;
     }
 
+    /**
+     * Terminate the game loop and finish the activity in 5 seconds
+     */
     public void endGame() {
         gameLoop.terminate();
         try {
@@ -414,7 +436,7 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
     private void levelSelect(int level) {
         switch (level) {
             case 1:
-                sprites.add(new Bowser(mContext, this));
+                sprites.add(new Bowser(mContext, this, 1000));
                 break;
             case 2:
 //                sprites.add(createSprite(R.drawable.dk_sprite, 50, 5));
@@ -425,6 +447,11 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
         }
     }
 
+    /**
+     * Check if the player can afford the selected barrier
+     * @param type
+     * @return
+     */
     public boolean affordable(char type){
         switch (type){
             case 'b':
@@ -454,6 +481,13 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
             default:
                 return false;
         }
+    }
+
+    /**
+     * Respawn Bowser with 1000 more health than before.
+     */
+    public void respawn(){
+        sprites.add(new Bowser(mContext, this, (bowsersKilled+1)*1000));
     }
 
     //Getters and Setters below.

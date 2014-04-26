@@ -24,4 +24,12 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
 
+    <fragment
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:name="com.mattseipel.happyslappyfuntime.app.Score"
+        android:id="@+id/score_fragment" />
+
 </RelativeLayout>

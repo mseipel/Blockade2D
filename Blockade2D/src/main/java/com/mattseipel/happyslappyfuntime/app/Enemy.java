@@ -21,6 +21,14 @@ public abstract class Enemy extends Sprite{
     //This is the amount of points awarded to the player for killing the enemy unit
     private int pointValue;
 
+    /**
+     * Enemy constructor
+     * @param gameBoard - calling view
+     * @param bm - spritesheet bitmap
+     * @param health
+     * @param spriteSheetRows
+     * @param spriteSheetColumns
+     */
     public Enemy(GameBoardCustomView gameBoard, Bitmap bm, int health, int spriteSheetRows, int spriteSheetColumns) {
         super(gameBoard, bm, health, spriteSheetRows, spriteSheetColumns);
     }

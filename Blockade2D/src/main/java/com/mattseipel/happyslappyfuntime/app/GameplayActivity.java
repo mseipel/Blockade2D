@@ -14,27 +14,38 @@ import android.view.View;
 import android.widget.TextView;
 
 public class GameplayActivity extends Activity {
+    //Fragment variables.
     Toolbar toolbar;
+    Score scoreFrag;
 
+    //Blockade selectors and win variable
     private boolean brick;
     private boolean concrete;
     private boolean electric;
     private boolean win;
 
+    //TextView variables
     TextView healthTV;
     TextView moneyTV;
+    TextView bowsersKilledTV;
 
-    AlertDialog gameOver;
-
+    //Money, health, and amount of bowsers killed
     private double cash = 100;
     private int health = 100;
+    private int score = 0;
 
     //Variables to get device height and width
     Display display;
     Point size = new Point();
     private int deviceWidth;
     private int deviceHeight;
-    
+
+    /**
+     * Create the activity
+     * Load the fragments
+     * Load in the text views
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,11 +60,14 @@ public class GameplayActivity extends Activity {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         toolbar = new Toolbar();
+        scoreFrag = new Score();
         fragmentTransaction.add(R.id.toolbar_fragment, toolbar);
+        fragmentTransaction.add(R.id.score_fragment, scoreFrag);
         fragmentTransaction.commit();
 
         healthTV = (TextView)findViewById(R.id.health);
         moneyTV = (TextView)findViewById(R.id.money);
+        bowsersKilledTV = (TextView)findViewById(R.id.scoreTV);
 
     }
 
@@ -78,26 +92,54 @@ public class GameplayActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Update the money text view
+     * @param moneyIn
+     */
     public void setMoneyToolbar(double moneyIn){
         moneyTV.setText(String.valueOf((int)Math.floor(cash)));
     }
 
+    /**
+     * Update the health text view
+     * @param healthIn
+     */
     public void setHealthToolbar(int healthIn){
         healthTV.setText(String.valueOf(health));
     }
 
+    /**
+     * Update the score text view
+     * @param scoreIn
+     */
+    public void setScoreCount(int scoreIn){
+        bowsersKilledTV.setText(String.valueOf(scoreIn));
+    }
+
+    /**
+     * Set booleans to corresponding values for brick
+     * @param view
+     */
     public void brickClicked(View view){
         brick = true;
         concrete = false;
         electric = false;
     }
 
+    /**
+     * Set booleans to corresponding values for concrete
+     * @param view
+     */
     public void concreteClicked(View view){
         brick = false;
         concrete = true;
         electric = false;
     }
 
+    /**
+     * Set booleans to corresponding values for electric
+     * @param view
+     */
     public void electricClicked(View view){
         brick = false;
         concrete = false;
@@ -132,6 +174,7 @@ public class GameplayActivity extends Activity {
         return cash;
     }
 
+    //Set cash and call the update text view method.  Only way this would work.  Something something threading rules.
     public void setCash(double cash) {
         this.cash = cash;
         setMoneyToolbar(cash);
@@ -141,9 +184,16 @@ public class GameplayActivity extends Activity {
         return health;
     }
 
+    //Set health and call the update text view method.  Only way this would work.  Something something threading rules.
     public void setHealth(int health) {
         this.health = health;
         setHealthToolbar(health);
+    }
+
+    //Set score and call the update text view method.  Only way this would work.  Something something threading rules.
+    public void setScore(int score){
+        this.score = score;
+        setScoreCount(score);
     }
 
     public boolean isWin() {

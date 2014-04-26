@@ -18,7 +18,7 @@ public abstract class Blockade {
     private float y;
     //Hitpoints
     private double health;
-    //Damage per second, value is divided by 20 (20 FPS) so DPS is accurate.
+    //Damage per second, value is divided by 15 (15 FPS) so DPS is accurate.
     private double dps;
 
     private boolean stillStanding;
@@ -27,7 +27,6 @@ public abstract class Blockade {
      * Builds the blockade.
      * @param mContext
      * @param x
-     * @param y
      * @param bitmap
      */
     public Blockade(Context mContext, float x, Bitmap bitmap) {
@@ -63,18 +62,6 @@ public abstract class Blockade {
 
     public void setX(float x) {
         this.x = x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    public double getHealth() {
-        return health;
     }
 
     public void setHealth(double health) {
