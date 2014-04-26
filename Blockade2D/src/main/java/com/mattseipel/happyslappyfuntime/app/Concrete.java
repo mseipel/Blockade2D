@@ -13,7 +13,7 @@ public class Concrete extends Blockade{
 
     public Concrete(Context mContext, float x){
         super(mContext, x, BitmapFactory.decodeResource(mContext.getResources(), R.drawable.templewall));
-        setHealth(75);
+        setHealth(100);
         setDPS(100);
     }
 

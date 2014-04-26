@@ -17,12 +17,14 @@ public class GameplayActivity extends Activity {
     //Fragment variables.
     Toolbar toolbar;
     Score scoreFrag;
+    AlertDialog gameOver;
 
     //Blockade selectors and win variable
     private boolean brick;
     private boolean concrete;
     private boolean electric;
     private boolean win;
+    private boolean end;
 
     //TextView variables
     TextView healthTV;
@@ -92,6 +94,11 @@ public class GameplayActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void menuButton(View view){
+        this.finish();
+
+    }
+
     /**
      * Update the money text view
      * @param moneyIn
@@ -144,6 +151,14 @@ public class GameplayActivity extends Activity {
         brick = false;
         concrete = false;
         electric = true;
+    }
+
+    public boolean isEnd() {
+        return end;
+    }
+
+    public void setEnd(boolean end) {
+        this.end = end;
     }
 
     public boolean isBrick() {

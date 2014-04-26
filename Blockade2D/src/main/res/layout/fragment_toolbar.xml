@@ -13,6 +13,7 @@
         android:id="@+id/menuBTN"
         android:background="@android:color/transparent"
         android:src="@drawable/menu"
+        android:onClick="menuButton"
         android:paddingStart="5dp" />
 
     <RadioGroup

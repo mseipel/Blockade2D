@@ -45,7 +45,7 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
     private Context mContext;           //Store the GameplayActivty context for later use (assigned in constructor)
 
     //Variables essential to collision detection.
-    private Sprite tempEnemy;
+    private static Sprite tempEnemy;
     private Blockade closestToBowser;
     float x, y, distanceFromBowser;
 
@@ -240,7 +240,14 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
                         ((Bowser) tempEnemy).attackAnimation();
                         closestToBowser.takeDamage(((Bowser) tempEnemy).getDps());
                         tempEnemy.takeDamage(closestToBowser.getDPS());
-                        moneyAmount += closestToBowser.getDPS();
+
+                        //Scale money of electric so it isn't over powered
+                        if(gameActivity.isElectric()){
+                            moneyAmount += closestToBowser.getDPS() * 0.25; //1/4 of damage dealt
+                        }else{
+                            moneyAmount += closestToBowser.getDPS() * 0.5;  //1/2 of damage dealt
+                        }
+
                         tempEnemy.setX((int) Math.floor(closestToBowser.getX()) - 30);
                         if (!closestToBowser.isStillStanding())
                             ((Bowser) tempEnemy).walkAnimation();

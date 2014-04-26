@@ -14,7 +14,7 @@ public class Brick extends  Blockade{
 
     public Brick(Context mContext, float x){
         super(mContext, x, BitmapFactory.decodeResource(mContext.getResources(), R.drawable.rubblewall));
-        setHealth(50);
+        setHealth(150);
         setDPS(50);
     }
 

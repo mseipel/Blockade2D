@@ -15,7 +15,7 @@ public class Electric extends Blockade {
     public Electric(Context mContext, float x){
         super(mContext, x, BitmapFactory.decodeResource(mContext.getResources(), R.drawable.electricalbarrier));
         setHealth(50);
-        setDPS(500);
+        setDPS(300);
     }
 
     public static int getCost(){
