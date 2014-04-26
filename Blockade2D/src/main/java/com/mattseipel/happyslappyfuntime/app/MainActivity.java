@@ -1,6 +1,7 @@
 package com.mattseipel.happyslappyfuntime.app;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -16,11 +17,15 @@ import android.widget.ImageButton;
 
 
 public class MainActivity extends Activity {
+    //This game runs well on a phone or phone emulators, tablets disorient the toolbar fragment.
+    //For best results run on a Nexus 5 or HTC One, or a device running a 1920x1080 display.
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
     }
 
 

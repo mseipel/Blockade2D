@@ -176,16 +176,15 @@ public class GameBoardCustomView extends SurfaceView implements View.OnTouchList
             sprite.onDraw(canvas);
         }
 
-        //Determine which image will pop up.  They are not centered because 0 is reading at the
-        //middle of the screen for whatever reason.
+        //Determine which image will pop up. Centered.
         if (win) {
             endGame = true;
             endGameScreen = BitmapFactory.decodeResource(getResources(), R.drawable.youwin);
-            canvas.drawBitmap(endGameScreen, -250f, 150f, null);
+            canvas.drawBitmap(endGameScreen, gameActivity.getDeviceWidth()/2 - endGameScreen.getWidth()/2, gameActivity.getDeviceHeight()/3.5f, null);
         } else if (tempEnemy.getX() > gameActivity.getDeviceWidth()) {
             endGame = true;
-            canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.youlose),
-                    gameActivity.getDeviceWidth() / 2 - 400, 150, null);
+            endGameScreen = BitmapFactory.decodeResource(getResources(), R.drawable.youlose);
+            canvas.drawBitmap(endGameScreen,gameActivity.getDeviceWidth()/2 - endGameScreen.getWidth()/2, gameActivity.getDeviceHeight()/3.5f, null);
         }
 
     }
